@@ -1,5 +1,5 @@
 server:
-  port: 6000
+  port: 5051
   tomcat:
     max-connections: 10
     max-http-form-post-size: 4MB
@@ -9,11 +9,21 @@ server:
 spring:
   application:
     name: cyber-done-account-microservice
+  profiles:
+    active: prod
   datasource:
-    url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+  flyway:
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    encoding: utf-8
+    url: ${DB_URL}
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 cache:
   token:
@@ -28,3 +38,15 @@ cache:
     time-to-live-seconds: 600
     eviction-policy: LRU
     max-entries-in-heap: 100
+
+security:
+  jwt-secret: ${JWT_SECRET}
+  jwt-expiration-time-ms: 86400000 #24 hours 86400000
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+security:
+  jwt-secret: ${JWT_SECRET}
+  jwt-expiration-time-ms: 86400000 #24 hours
