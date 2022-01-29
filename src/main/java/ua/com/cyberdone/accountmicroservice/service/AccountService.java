@@ -113,36 +113,6 @@ public class AccountService {
         throw new AlreadyExistException("Account with username=" + registrationDto.getUsername() + " exists.");
     }
 
-//    //private String creatorToken;
-//    @Transactional
-//    public AccountDto createAccountFrom(RegistrationDto registrationDto)
-//            throws NotFoundException, AlreadyExistException, AccessDeniedException {
-//        if (!accountRepository.existsByUsername(registrationDto.getUsername())) {
-//            var account = new AccountMapper<RegistrationDto>(modelMapper).toEntity(registrationDto, Account.class);
-//            var token = registrationDto.getCreatorToken();
-//            if (nonNull(token)) {
-//                var creatorUserUsername = jwtService.getUsername(token);
-//                var creatorAccount = accountRepository.findByUsername(creatorUserUsername).orElseThrow(
-//                        () -> new NotFoundException("Account creator is not found."));
-//                var permitted = AccountUtils.permittedToCreateNewUser(creatorAccount);
-//                return createNewUserIfCreatorPermitted(permitted, account);
-//            }
-//            var defaultRole = Set.of(roleRepository.findByRole(AccountUtils.DEFAULT_ROLE).orElseThrow());
-//            AccountUtils.setupAccount(passwordEncoder, account, defaultRole);
-//            return createNewUser(account);
-//        }
-//        throw new AlreadyExistException("Account with username=" + registrationDto.getUsername() + " exists.");
-//    }
-//
-//    private AccountDto createNewUserIfCreatorPermitted(boolean permitted, Account account)
-//            throws AccessDeniedException {
-//        if (permitted) {
-//            AccountUtils.setupAccount(passwordEncoder, account);
-//            return createNewUser(account);
-//        }
-//        throw new AccessDeniedException("Account creator is not permitted to create new User");
-//    }
-
     @Caching(evict = {
             @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
             @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})

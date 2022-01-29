@@ -19,26 +19,24 @@ import java.util.Objects;
 @EnableCaching
 @Configuration
 public class CyberdoneCachingConfig extends CachingConfigurerSupport {
-    private static final Long SINGLE_ENTRY_IN_HEAP = 1L;
     public static final String TOKEN_CACHE_NAME = "TOKEN_CACHE";
+    public static final String ACCOUNT_CACHE_NAME = "ACCOUNT_CACHE";
+    public static final String ACCOUNTS_CACHE_NAME = "ACCOUNTS_CACHE";
+    public static final String PERMISSION_CACHE_NAME = "PERMISSION_CACHE";
+    public static final String PERMISSIONS_CACHE_NAME = "PERMISSIONS_CACHE";
+    private static final Long SINGLE_ENTRY_IN_HEAP = 1L;
     @Value("${cache.token.eviction-policy}")
     private String TOKEN_MEMORY_STORE_EVICTION_POLICY;
     @Value("${cache.token.time-to-live-seconds}")
     private Long TOKEN_LIVE_IN_CACHE_SECONDS;
     @Value("${cache.token.max-entries-in-heap}")
     private Long TOKEN_MAX_ENTRIES_IN_HEAP;
-
-    public static final String ACCOUNT_CACHE_NAME = "ACCOUNT_CACHE";
-    public static final String ACCOUNTS_CACHE_NAME = "ACCOUNTS_CACHE";
     @Value("${cache.account.eviction-policy}")
     private String ACCOUNT_MEMORY_STORE_EVICTION_POLICY;
     @Value("${cache.account.time-to-live-seconds}")
     private Long ACCOUNT_LIVE_IN_CACHE_SECONDS;
     @Value("${cache.account.max-entries-in-heap}")
     private Long ACCOUNT_MAX_ENTRIES_IN_HEAP;
-
-    public static final String PERMISSION_CACHE_NAME = "PERMISSION_CACHE";
-    public static final String PERMISSIONS_CACHE_NAME = "PERMISSIONS_CACHE";
     @Value("${cache.permission.eviction-policy}")
     private String PERMISSION_MEMORY_STORE_EVICTION_POLICY;
     @Value("${cache.permission.time-to-live-seconds}")
