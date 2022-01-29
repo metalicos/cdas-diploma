@@ -9,6 +9,7 @@ server:
 spring:
   application:
     name: cyber-done-account-microservice
+    version: @version@
   profiles:
     active: prod
   datasource:

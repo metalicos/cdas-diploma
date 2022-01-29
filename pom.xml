@@ -11,7 +11,7 @@
 
     <groupId>ua.com.cyberdone</groupId>
     <artifactId>AccountMicroservice</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>AccountMicroservice</name>
     <description>AccountMicroservice</description>
 
@@ -124,6 +124,11 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-data-rest</artifactId>
+            <version>${spring.doc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-security</artifactId>
             <version>${spring.doc.version}</version>
         </dependency>
     </dependencies>

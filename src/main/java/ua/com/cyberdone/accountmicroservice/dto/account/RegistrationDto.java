@@ -9,7 +9,6 @@ import java.util.Set;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegistrationDto {
-    private String creatorToken;
     private String username;
     private String password;
     private String firstName;

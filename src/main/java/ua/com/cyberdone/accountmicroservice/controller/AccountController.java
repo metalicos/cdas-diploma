@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +19,8 @@ import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedExcepti
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AuthenticationException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
+import ua.com.cyberdone.accountmicroservice.controller.docs.AccountControllerApi;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountDto;
-import ua.com.cyberdone.accountmicroservice.dto.account.AccountsDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangeEmailDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangeFullNameDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangePasswordDto;
@@ -32,51 +33,59 @@ import ua.com.cyberdone.accountmicroservice.service.AuthenticationService;
 
 import javax.validation.Valid;
 
-import static java.util.Objects.nonNull;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/accounts")
-public class AccountController {
+public class AccountController implements AccountControllerApi {
     private final AccountService accountService;
     private final AuthenticationService authenticationService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('r_all','r_accounts','r_self')")
-    public ResponseEntity<Object> readAccounts(@RequestParam(value = "username", required = false) String username)
+    @PreAuthorize("hasAnyAuthority('r_all','r_accounts')")
+    public ResponseEntity<Object> readAccounts(@RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "20") int size,
+                                               @RequestParam(defaultValue = "NONE") String direction,
+                                               @RequestParam(defaultValue = "NONE") String sortBy)
             throws NotFoundException {
-        if (nonNull(username)) {
-            return ResponseEntity.ok(accountService.getAccount(username));
+        if ("NONE".equals(sortBy) && sortBy.equals(direction)) {
+            return ResponseEntity.ok(accountService.getAllAccounts(page, size));
         }
-        return ResponseEntity.ok(accountService.getAllAccounts());
+        return ResponseEntity.ok(accountService.getAllAccounts(page, size, direction, sortBy));
+    }
+
+    @GetMapping("/{username}")
+    @PreAuthorize("hasAnyAuthority('r_all','r_account','r_self')")
+    public ResponseEntity<Object> readAccount(@PathVariable(value = "username") String username)
+            throws NotFoundException {
+        return ResponseEntity.ok(accountService.getAccount(username));
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAnyAuthority('d_all','d_accounts','d_self')")
-    public ResponseEntity<String> deleteAccounts(@RequestParam(value = "username", required = false) String username) {
-        if (nonNull(username)) {
-            accountService.deleteAccount(username);
-            return ResponseEntity.ok(ControllerConstantUtils.OK);
-        }
+    @PreAuthorize("hasAnyAuthority('d_all','d_accounts')")
+    public ResponseEntity<String> deleteAccounts() {
         accountService.deleteAllAccounts();
+        return ResponseEntity.ok(ControllerConstantUtils.OK);
+    }
+
+    @DeleteMapping("/{username}")
+    @PreAuthorize("hasAnyAuthority('d_all','d_account','d_self')")
+    public ResponseEntity<String> deleteAccount(@PathVariable String username) {
+        accountService.deleteAccount(username);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
 
     @PostMapping("/registration")
     public ResponseEntity<AccountDto> createAccount(@RequestBody RegistrationDto registrationDto)
-            throws AccessDeniedException, NotFoundException, AlreadyExistException {
+            throws AlreadyExistException {
         return ResponseEntity.ok(accountService.createAccount(registrationDto));
     }
 
-    @GetMapping("/page/{page}/size/{size}/sort-by/{sort-by}/direction/{direction}")
-    @PreAuthorize("hasAnyAuthority('r_all','r_accounts','r_self')")
-    public ResponseEntity<AccountsDto> readAccounts(@PathVariable("page") Integer page,
-                                                    @PathVariable("size") Integer size,
-                                                    @PathVariable("sort-by") String sortBy,
-                                                    @PathVariable("direction") String direction)
-            throws NotFoundException {
-        return ResponseEntity.ok(accountService.getAllAccounts(page, size, direction, sortBy));
+    @PostMapping("/create")
+    public ResponseEntity<AccountDto> createAccount(@RequestBody RegistrationDto registrationDto,
+                                                    @RequestHeader("Authorization") String token)
+            throws AccessDeniedException, NotFoundException, AlreadyExistException {
+        return ResponseEntity.ok(accountService.createAccountFromAnotherAccount(registrationDto, token));
     }
 
     @PutMapping("/change/password")
@@ -109,8 +118,7 @@ public class AccountController {
     }
 
     @PostMapping("/authentication/logout")
-    public ResponseEntity<TokenDto> logout(@RequestBody @Valid LogoutDto logoutDto)
-            throws NotFoundException, AlreadyExistException {
+    public ResponseEntity<TokenDto> logout(@RequestBody @Valid LogoutDto logoutDto) {
         TokenDto tokenDto = authenticationService.logout(logoutDto);
         return ResponseEntity.ok(tokenDto);
     }

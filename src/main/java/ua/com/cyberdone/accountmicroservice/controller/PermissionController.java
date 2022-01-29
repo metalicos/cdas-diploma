@@ -51,7 +51,7 @@ public class PermissionController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('w_all','w_permissions')")
     public ResponseEntity<PermissionDto> createPermission(@RequestBody CreatePermissionDto dto)
-            throws NotFoundException, AlreadyExistException {
+            throws AlreadyExistException {
         return ResponseEntity.ok(permissionService.createPermission(dto.getName(), dto.getValue()));
     }
 

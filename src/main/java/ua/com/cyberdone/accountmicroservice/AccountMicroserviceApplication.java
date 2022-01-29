@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableJpaRepositories
 @SpringBootApplication
-
 public class AccountMicroserviceApplication {
 
     public static void main(String[] args) {

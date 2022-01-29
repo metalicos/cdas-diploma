@@ -26,10 +26,4 @@ public class RestError {
 
     @JsonProperty("detail")
     private final String detail;
-
-    public RestError(String error, String title, String detail) {
-        this.error = error;
-        this.title = title;
-        this.detail = detail;
-    }
 }

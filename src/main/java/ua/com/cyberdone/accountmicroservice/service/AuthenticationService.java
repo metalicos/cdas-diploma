@@ -33,7 +33,6 @@ public class AuthenticationService {
                     new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
             var authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
             var account = accountService.getAccount(loginDto.getUsername());
             var token = jwtService.generateToken(account);
             return TokenDto.builder()
@@ -41,7 +40,7 @@ public class AuthenticationService {
                     .tokenLiveTimeInSeconds(MILLISECONDS.toSeconds(jwtService.expTimeInMs()))
                     .build();
         } catch (BadCredentialsException | NotFoundException | JsonProcessingException ex) {
-            throw new AuthenticationException("Bad Username or Password. Exception=" + ex.getMessage());
+            throw new AuthenticationException("Bad Username or Password. ", ex);
         }
     }
 

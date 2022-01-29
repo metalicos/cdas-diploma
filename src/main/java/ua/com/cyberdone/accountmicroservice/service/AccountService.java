@@ -45,12 +45,19 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder;
 
     @Cacheable(value = ACCOUNTS_CACHE_NAME)
-    public AccountsDto getAllAccounts() throws NotFoundException {
-        var accounts = Optional.of(accountRepository.findAll())
+    public AccountsDto getAllAccounts(int page, int size) throws NotFoundException {
+        var accounts = Optional.of(accountRepository.findAll(PageRequest.of(page, size)))
                 .orElseThrow(() -> new NotFoundException("None accounts was found."));
-        log.info("Caching all accounts");
         return AccountsDto.builder()
-                .accounts(new AccountMapper<AccountDto>(modelMapper).toDtoList(accounts, AccountDto.class)).build();
+                .page(page)
+                .elementsOnThePage(size)
+                .foundElements(accounts.getNumberOfElements())
+                .totallyElements(accounts.getTotalElements())
+                .totallyPages(accounts.getTotalPages())
+                .sortedBy("NONE")
+                .sortDirection("NONE")
+                .accounts(new AccountMapper<AccountDto>(modelMapper).toDtoList(accounts.getContent(), AccountDto.class))
+                .build();
     }
 
     public AccountsDto getAllAccounts(int page, int size, String direction, String sortBy) throws NotFoundException {
@@ -78,33 +85,62 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountDto createAccount(RegistrationDto registrationDto)
+    public AccountDto createAccountFromAnotherAccount(RegistrationDto registrationDto, String creatorsToken)
             throws NotFoundException, AlreadyExistException, AccessDeniedException {
         if (!accountRepository.existsByUsername(registrationDto.getUsername())) {
             var account = new AccountMapper<RegistrationDto>(modelMapper).toEntity(registrationDto, Account.class);
-            var token = registrationDto.getCreatorToken();
-            if (nonNull(token)) {
-                var creatorUserUsername = jwtService.getUsername(token);
-                var creatorAccount = accountRepository.findByUsername(creatorUserUsername).orElseThrow(
-                        () -> new NotFoundException("Account creator is not found."));
-                var permitted = AccountUtils.permittedToCreateNewUser(creatorAccount);
-                return createNewUserIfCreatorPermitted(permitted, account);
+            var creatorsUserUsername = jwtService.getUsername(creatorsToken);
+            var creatorAccount = accountRepository.findByUsername(creatorsUserUsername).orElseThrow(
+                    () -> new NotFoundException("Account creator is not found."));
+            if (AccountUtils.permittedToCreateNewUser(creatorAccount)) {
+                AccountUtils.setupAccount(passwordEncoder, account);
+                return createNewUser(account);
             }
-            var defaultRole = Set.of(roleRepository.findByRole(AccountUtils.DEFAULT_ROLE).orElseThrow());
-            AccountUtils.setupAccount(passwordEncoder, account, defaultRole);
+            throw new AccessDeniedException("Account creator is not permitted to create new User");
+        }
+        throw new AlreadyExistException("Account with username=" + registrationDto.getUsername() + " exists.");
+    }
+
+    @Transactional
+    public AccountDto createAccount(RegistrationDto registrationDto)
+            throws AlreadyExistException {
+        if (!accountRepository.existsByUsername(registrationDto.getUsername())) {
+            var account = new AccountMapper<RegistrationDto>(modelMapper).toEntity(registrationDto, Account.class);
+            AccountUtils.setupAccount(passwordEncoder, account);
             return createNewUser(account);
         }
         throw new AlreadyExistException("Account with username=" + registrationDto.getUsername() + " exists.");
     }
 
-    private AccountDto createNewUserIfCreatorPermitted(boolean permitted, Account account)
-            throws AccessDeniedException {
-        if (permitted) {
-            AccountUtils.setupAccount(passwordEncoder, account);
-            return createNewUser(account);
-        }
-        throw new AccessDeniedException("Account creator is not permitted to create new User");
-    }
+//    //private String creatorToken;
+//    @Transactional
+//    public AccountDto createAccountFrom(RegistrationDto registrationDto)
+//            throws NotFoundException, AlreadyExistException, AccessDeniedException {
+//        if (!accountRepository.existsByUsername(registrationDto.getUsername())) {
+//            var account = new AccountMapper<RegistrationDto>(modelMapper).toEntity(registrationDto, Account.class);
+//            var token = registrationDto.getCreatorToken();
+//            if (nonNull(token)) {
+//                var creatorUserUsername = jwtService.getUsername(token);
+//                var creatorAccount = accountRepository.findByUsername(creatorUserUsername).orElseThrow(
+//                        () -> new NotFoundException("Account creator is not found."));
+//                var permitted = AccountUtils.permittedToCreateNewUser(creatorAccount);
+//                return createNewUserIfCreatorPermitted(permitted, account);
+//            }
+//            var defaultRole = Set.of(roleRepository.findByRole(AccountUtils.DEFAULT_ROLE).orElseThrow());
+//            AccountUtils.setupAccount(passwordEncoder, account, defaultRole);
+//            return createNewUser(account);
+//        }
+//        throw new AlreadyExistException("Account with username=" + registrationDto.getUsername() + " exists.");
+//    }
+//
+//    private AccountDto createNewUserIfCreatorPermitted(boolean permitted, Account account)
+//            throws AccessDeniedException {
+//        if (permitted) {
+//            AccountUtils.setupAccount(passwordEncoder, account);
+//            return createNewUser(account);
+//        }
+//        throw new AccessDeniedException("Account creator is not permitted to create new User");
+//    }
 
     @Caching(evict = {
             @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),

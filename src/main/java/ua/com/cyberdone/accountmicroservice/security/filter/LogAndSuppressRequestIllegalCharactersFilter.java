@@ -15,7 +15,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -26,7 +29,7 @@ public class LogAndSuppressRequestIllegalCharactersFilter extends GenericFilterB
             "The request was rejected because the URL contained a potentially malicious string.";
     private static final String LOG_ILLEGAL_CHARACTERS_IN_REQUEST =
             "The request contains illegal characters: {}";
-    private static final String[] INVALID_CHARACTERS_ARRAY = {"!", "@", "$"};
+    private static final String[] INVALID_CHARACTERS_ARRAY = {"!", "$"};
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
