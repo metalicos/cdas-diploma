@@ -32,13 +32,13 @@ public interface AccountControllerApi {
     @ApiResponse(responseCode = "200", description = "Return accounts with pagination (page, size) / order 'direction' (ASC / DESC) / filter by word 'sortBy'",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountsDto.class)))
-    ResponseEntity<Object> readAccounts(int page, int size, String direction, String sortBy) throws NotFoundException;
+    ResponseEntity<AccountsDto> readAccounts(int page, int size, String direction, String sortBy) throws NotFoundException;
 
     @Operation(summary = "Read Accounts", description = "Return account by username")
     @ApiResponse(responseCode = "200", description = "Return account by username",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountDto.class)))
-    ResponseEntity<Object> readAccount(String username) throws NotFoundException;
+    ResponseEntity<AccountDto> readAccount(String username) throws NotFoundException;
 
     @Operation(summary = "Delete Accounts", description = "Delete all accounts")
     @ApiResponse(responseCode = "200", description = "Delete all accounts",
@@ -57,14 +57,13 @@ public interface AccountControllerApi {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountDto.class)))
     ResponseEntity<AccountDto> createAccount(RegistrationDto registrationDto)
-            throws AlreadyExistException;
+            throws AlreadyExistException, NotFoundException;
 
     @Operation(summary = "Create Account", description = "Create the new account from another account")
     @ApiResponse(responseCode = "200", description = "Create the new account from another account",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountDto.class)))
-    ResponseEntity<AccountDto> createAccount(RegistrationDto registrationDto,
-                                             String token)
+    ResponseEntity<AccountDto> createAccount(RegistrationDto registrationDto, String token)
             throws AccessDeniedException, NotFoundException, AlreadyExistException;
 
     @Operation(summary = "Change password", description = "Change account's password")
@@ -103,8 +102,7 @@ public interface AccountControllerApi {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(
                     implementation = TokenDto.class,
                     example = "{\n" +
-                            "    \"authToken\": \"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJvc3RhcC5qYUBnbWFpbC5jb20iLCJqdGkiOiIxIiwicm9sZXMiOiJbe1wiaWRcIjoxLFwiY3JlYXRlZFRpbWVzdGFtcFwiOlwiMjAyMi0wMS0yOVQxNTozNDozNy42NDI3MjNcIixcInJvbGVcIjpcIk9XTkVSXCIsXCJwZXJtaXNzaW9uc1wiOlt7XCJpZFwiOjEsXCJjcmVhdGVkVGltZXN0YW1wXCI6XCIyMDIyLTAxLTI5VDE1OjM0OjM3LjYyODY2NFwiLFwibmFtZVwiOlwiUmVhZCBBbGxcIixcInZhbHVlXCI6XCJyX2FsbFwifSx7XCJpZFwiOjIsXCJjcmVhdGVkVGltZXN0YW1wXCI6XCIyMDIyLTAxLTI5VDE1OjM0OjM3LjYyODY2NFwiLFwibmFtZVwiOlwiV3JpdGUgQWxsXCIsXCJ2YWx1ZVwiOlwid19hbGxcIn0se1wiaWRcIjozLFwiY3JlYXRlZFRpbWVzdGFtcFwiOlwiMjAyMi0wMS0yOVQxNTozNDozNy42Mjg2NjRcIixcIm5hbWVcIjpcIlVwZGF0ZSBBbGxcIixcInZhbHVlXCI6XCJ1X2FsbFwifSx7XCJpZFwiOjQsXCJjcmVhdGVkVGltZXN0YW1wXCI6XCIyMDIyLTAxLTI5VDE1OjM0OjM3LjYyODY2NFwiLFwibmFtZVwiOlwiRGVsZXRlIEFsbFwiLFwidmFsdWVcIjpcImRfYWxsXCJ9XX1dIiwiaWF0IjoxNjQzNDkwMzgyLCJleHAiOjE2NDM1NzY3ODJ9.Hs_bbclHC2v85YVgLsei5Daumz-JlXJ70zZOqslpLtVcFIk86iuJ2Z_3IUdAd-pm-KAFYIxbvtDVXC7ZK_2AXw\",\n" +
-                            "    \"tokenLiveTimeInSeconds\": 86400\n" +
+                            "    \"authToken\": \"\",\n" +
                             "}")))
     ResponseEntity<TokenDto> logout(@RequestBody @Valid LogoutDto logoutDto)
             throws NotFoundException, AlreadyExistException;

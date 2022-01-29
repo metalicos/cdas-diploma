@@ -21,6 +21,7 @@ import ua.com.cyberdone.accountmicroservice.common.exception.AuthenticationExcep
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
 import ua.com.cyberdone.accountmicroservice.controller.docs.AccountControllerApi;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountDto;
+import ua.com.cyberdone.accountmicroservice.dto.account.AccountsDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangeEmailDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangeFullNameDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangePasswordDto;
@@ -43,10 +44,10 @@ public class AccountController implements AccountControllerApi {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('r_all','r_accounts')")
-    public ResponseEntity<Object> readAccounts(@RequestParam(defaultValue = "0") int page,
-                                               @RequestParam(defaultValue = "20") int size,
-                                               @RequestParam(defaultValue = "NONE") String direction,
-                                               @RequestParam(defaultValue = "NONE") String sortBy)
+    public ResponseEntity<AccountsDto> readAccounts(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "20") int size,
+                                                    @RequestParam(defaultValue = "NONE") String direction,
+                                                    @RequestParam(defaultValue = "NONE") String sortBy)
             throws NotFoundException {
         if ("NONE".equals(sortBy) && sortBy.equals(direction)) {
             return ResponseEntity.ok(accountService.getAllAccounts(page, size));
@@ -56,7 +57,7 @@ public class AccountController implements AccountControllerApi {
 
     @GetMapping("/{username}")
     @PreAuthorize("hasAnyAuthority('r_all','r_account','r_self')")
-    public ResponseEntity<Object> readAccount(@PathVariable(value = "username") String username)
+    public ResponseEntity<AccountDto> readAccount(@PathVariable(value = "username") String username)
             throws NotFoundException {
         return ResponseEntity.ok(accountService.getAccount(username));
     }
@@ -77,7 +78,7 @@ public class AccountController implements AccountControllerApi {
 
     @PostMapping("/registration")
     public ResponseEntity<AccountDto> createAccount(@RequestBody RegistrationDto registrationDto)
-            throws AlreadyExistException {
+            throws AlreadyExistException, NotFoundException {
         return ResponseEntity.ok(accountService.createAccount(registrationDto));
     }
 

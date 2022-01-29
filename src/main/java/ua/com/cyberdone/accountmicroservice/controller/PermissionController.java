@@ -14,37 +14,47 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.com.cyberdone.accountmicroservice.common.constant.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
+import ua.com.cyberdone.accountmicroservice.controller.docs.PermissionControllerApi;
 import ua.com.cyberdone.accountmicroservice.dto.permission.CreatePermissionDto;
 import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionDto;
 import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionsDto;
 import ua.com.cyberdone.accountmicroservice.service.PermissionService;
 
-import static java.util.Objects.nonNull;
-
 @RestController
 @AllArgsConstructor
 @RequestMapping("/permissions")
-public class PermissionController {
+public class PermissionController implements PermissionControllerApi {
     private final PermissionService permissionService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('r_all','r_permissions')")
-    public ResponseEntity<Object> readPermissions(@RequestParam(value = "name", required = false) String name)
-            throws NotFoundException {
-        if (nonNull(name)) {
-            return ResponseEntity.ok(permissionService.getPermission(name));
+    public ResponseEntity<PermissionsDto> readPermissions(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "20") int size,
+                                                          @RequestParam(defaultValue = "NONE") String direction,
+                                                          @RequestParam(defaultValue = "NONE") String sortBy) {
+        if ("NONE".equals(sortBy) && sortBy.equals(direction)) {
+            return ResponseEntity.ok(permissionService.getAllPermissions(page, size));
         }
-        return ResponseEntity.ok(permissionService.getAllPermissions());
+        return ResponseEntity.ok(permissionService.getAllPermissions(page, size, direction, sortBy));
+    }
+
+    @GetMapping("/{name}")
+    @PreAuthorize("hasAnyAuthority('r_all','r_permission')")
+    public ResponseEntity<PermissionDto> readPermission(@PathVariable String name) throws NotFoundException {
+        return ResponseEntity.ok(permissionService.getPermission(name));
     }
 
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('d_all','d_permissions')")
-    public ResponseEntity<String> deletePermissions(@RequestParam(value = "name", required = false) String name) {
-        if (nonNull(name)) {
-            permissionService.deletePermission(name);
-            return ResponseEntity.ok(ControllerConstantUtils.OK);
-        }
+    public ResponseEntity<String> deletePermissions() {
         permissionService.deleteAllPermission();
+        return ResponseEntity.ok(ControllerConstantUtils.OK);
+    }
+
+    @DeleteMapping("/{name}")
+    @PreAuthorize("hasAnyAuthority('d_all','d_permissions')")
+    public ResponseEntity<String> deletePermission(@PathVariable String name) {
+        permissionService.deletePermission(name);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
 
@@ -53,14 +63,5 @@ public class PermissionController {
     public ResponseEntity<PermissionDto> createPermission(@RequestBody CreatePermissionDto dto)
             throws AlreadyExistException {
         return ResponseEntity.ok(permissionService.createPermission(dto.getName(), dto.getValue()));
-    }
-
-    @GetMapping("/page/{page}/size/{size}/sort-by/{sort-by}/direction/{direction}")
-    @PreAuthorize("hasAnyAuthority('r_all','r_permissions')")
-    public ResponseEntity<PermissionsDto> readPermissions(@PathVariable("page") Integer page,
-                                                          @PathVariable("size") Integer size,
-                                                          @PathVariable("sort-by") String sortBy,
-                                                          @PathVariable("direction") String direction) {
-        return ResponseEntity.ok(permissionService.getAllPermissions(page, size, direction, sortBy));
     }
 }

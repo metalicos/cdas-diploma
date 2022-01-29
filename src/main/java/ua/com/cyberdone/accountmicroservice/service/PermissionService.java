@@ -17,9 +17,6 @@ import ua.com.cyberdone.accountmicroservice.entity.Permission;
 import ua.com.cyberdone.accountmicroservice.mapper.PermissionMapper;
 import ua.com.cyberdone.accountmicroservice.repository.PermissionRepository;
 
-import java.util.HashSet;
-import java.util.Optional;
-
 import static ua.com.cyberdone.accountmicroservice.config.CyberdoneCachingConfig.PERMISSIONS_CACHE_NAME;
 import static ua.com.cyberdone.accountmicroservice.config.CyberdoneCachingConfig.PERMISSION_CACHE_NAME;
 
@@ -31,12 +28,19 @@ public class PermissionService {
     private final PermissionRepository permissionRepository;
     private final ModelMapper modelMapper;
 
-    @Cacheable(value = PERMISSIONS_CACHE_NAME)
-    public PermissionsDto getAllPermissions() throws NotFoundException {
-        var permissions = Optional.of(permissionRepository.findAll()).orElseThrow(
-                () -> new NotFoundException("Permission not found"));
-        log.info("Permissions {} are successfully read", permissions);
-        return PermissionsDto.builder().permissions(new HashSet<>(permissions)).build();
+    public PermissionsDto getAllPermissions(int page, int size) {
+        var permissionPage = permissionRepository.findAll(PageRequest.of(page, size));
+        log.info("Permissions {} are successfully read", permissionPage.getContent());
+        return PermissionsDto.builder()
+                .page(page)
+                .elementsOnThePage(size)
+                .totallyPages(permissionPage.getTotalPages())
+                .foundElements(permissionPage.getNumberOfElements())
+                .totallyElements(permissionPage.getTotalElements())
+                .sortedBy("NONE")
+                .sortDirection("NONE")
+                .permissions(permissionPage.toSet())
+                .build();
     }
 
     public PermissionsDto getAllPermissions(int page, int size, String direction, String sortBy) {

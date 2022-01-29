@@ -30,7 +30,6 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Set;
 
-import static java.util.Objects.nonNull;
 import static ua.com.cyberdone.accountmicroservice.config.CyberdoneCachingConfig.ACCOUNTS_CACHE_NAME;
 import static ua.com.cyberdone.accountmicroservice.config.CyberdoneCachingConfig.ACCOUNT_CACHE_NAME;
 
@@ -90,9 +89,9 @@ public class AccountService {
         if (!accountRepository.existsByUsername(registrationDto.getUsername())) {
             var account = new AccountMapper<RegistrationDto>(modelMapper).toEntity(registrationDto, Account.class);
             var creatorsUserUsername = jwtService.getUsername(creatorsToken);
-            var creatorAccount = accountRepository.findByUsername(creatorsUserUsername).orElseThrow(
+            var creatorsAccount = accountRepository.findByUsername(creatorsUserUsername).orElseThrow(
                     () -> new NotFoundException("Account creator is not found."));
-            if (AccountUtils.permittedToCreateNewUser(creatorAccount)) {
+            if (AccountUtils.permittedToCreateNewUser(creatorsAccount)) {
                 AccountUtils.setupAccount(passwordEncoder, account);
                 return createNewUser(account);
             }
@@ -103,10 +102,12 @@ public class AccountService {
 
     @Transactional
     public AccountDto createAccount(RegistrationDto registrationDto)
-            throws AlreadyExistException {
+            throws AlreadyExistException, NotFoundException {
         if (!accountRepository.existsByUsername(registrationDto.getUsername())) {
             var account = new AccountMapper<RegistrationDto>(modelMapper).toEntity(registrationDto, Account.class);
-            AccountUtils.setupAccount(passwordEncoder, account);
+            var defaultRole = Set.of(roleRepository.findByRole(AccountUtils.DEFAULT_ROLE).orElseThrow(
+                    () -> new NotFoundException("Role for account is not found.")));
+            AccountUtils.setupAccount(passwordEncoder, account, defaultRole);
             return createNewUser(account);
         }
         throw new AlreadyExistException("Account with username=" + registrationDto.getUsername() + " exists.");
