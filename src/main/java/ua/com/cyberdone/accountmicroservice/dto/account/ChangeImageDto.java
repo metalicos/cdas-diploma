@@ -9,8 +9,6 @@ import javax.validation.constraints.Pattern;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChangeImageDto {
-    ;
-
     @Pattern(regexp = Regex.FIRST_NAME,
             message = Regex.FIRST_NAME_FAIL_MESSAGE)
     private String firstName;

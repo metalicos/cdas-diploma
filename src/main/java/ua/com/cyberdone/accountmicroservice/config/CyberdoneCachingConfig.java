@@ -28,58 +28,58 @@ public class CyberdoneCachingConfig extends CachingConfigurerSupport {
     public static final String ROLES_CACHE_NAME = "ROLES_CACHE";
     private static final Long SINGLE_ENTRY_IN_HEAP = 1L;
     @Value("${cache.token.eviction-policy}")
-    private String TOKEN_MEMORY_STORE_EVICTION_POLICY;
+    private String tokenMemoryStoreEvictionPolicy;
     @Value("${cache.token.time-to-live-seconds}")
-    private Long TOKEN_LIVE_IN_CACHE_SECONDS;
+    private Long tokenLiveInCacheSeconds;
     @Value("${cache.token.max-entries-in-heap}")
-    private Long TOKEN_MAX_ENTRIES_IN_HEAP;
+    private Long tokenMaxEntriesInHeap;
 
     @Value("${cache.model.eviction-policy}")
-    private String MODEL_MEMORY_STORE_EVICTION_POLICY;
+    private String modelMemoryStoreEvictionPolicy;
     @Value("${cache.model.time-to-live-seconds}")
-    private Long MODEL_LIVE_IN_CACHE_SECONDS;
+    private Long modelLiveInCacheSeconds;
     @Value("${cache.model.max-entries-in-heap}")
-    private Long MODEL_MAX_ENTRIES_IN_HEAP;
+    private Long modelMaxEntriesInHeap;
 
     @Bean
     net.sf.ehcache.CacheManager getEhcacheManager() {
         var tokenCacheConfig = new CacheConfiguration();
         tokenCacheConfig.setName(TOKEN_CACHE_NAME);
-        tokenCacheConfig.setMemoryStoreEvictionPolicy(TOKEN_MEMORY_STORE_EVICTION_POLICY);
-        tokenCacheConfig.setTimeToLiveSeconds(TOKEN_LIVE_IN_CACHE_SECONDS);
-        tokenCacheConfig.setMaxEntriesLocalHeap(TOKEN_MAX_ENTRIES_IN_HEAP);
+        tokenCacheConfig.setMemoryStoreEvictionPolicy(tokenMemoryStoreEvictionPolicy);
+        tokenCacheConfig.setTimeToLiveSeconds(tokenLiveInCacheSeconds);
+        tokenCacheConfig.setMaxEntriesLocalHeap(tokenMaxEntriesInHeap);
 
         var permissionCacheConfig = new CacheConfiguration();
         permissionCacheConfig.setName(PERMISSION_CACHE_NAME);
-        permissionCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
-        permissionCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
-        permissionCacheConfig.setMaxEntriesLocalHeap(MODEL_MAX_ENTRIES_IN_HEAP);
+        permissionCacheConfig.setMemoryStoreEvictionPolicy(modelMemoryStoreEvictionPolicy);
+        permissionCacheConfig.setTimeToLiveSeconds(modelLiveInCacheSeconds);
+        permissionCacheConfig.setMaxEntriesLocalHeap(modelMaxEntriesInHeap);
         var permissionsCacheConfig = new CacheConfiguration();
         permissionsCacheConfig.setName(PERMISSIONS_CACHE_NAME);
-        permissionsCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
-        permissionsCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
+        permissionsCacheConfig.setMemoryStoreEvictionPolicy(modelMemoryStoreEvictionPolicy);
+        permissionsCacheConfig.setTimeToLiveSeconds(modelLiveInCacheSeconds);
         permissionsCacheConfig.setMaxEntriesLocalHeap(SINGLE_ENTRY_IN_HEAP);
 
         var accountCacheConfig = new CacheConfiguration();
         accountCacheConfig.setName(ACCOUNT_CACHE_NAME);
-        accountCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
-        accountCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
-        accountCacheConfig.setMaxEntriesLocalHeap(MODEL_MAX_ENTRIES_IN_HEAP);
+        accountCacheConfig.setMemoryStoreEvictionPolicy(modelMemoryStoreEvictionPolicy);
+        accountCacheConfig.setTimeToLiveSeconds(modelLiveInCacheSeconds);
+        accountCacheConfig.setMaxEntriesLocalHeap(modelMaxEntriesInHeap);
         var accountsCacheConfig = new CacheConfiguration();
         accountsCacheConfig.setName(ACCOUNTS_CACHE_NAME);
-        accountsCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
-        accountsCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
+        accountsCacheConfig.setMemoryStoreEvictionPolicy(modelMemoryStoreEvictionPolicy);
+        accountsCacheConfig.setTimeToLiveSeconds(modelLiveInCacheSeconds);
         accountsCacheConfig.setMaxEntriesLocalHeap(SINGLE_ENTRY_IN_HEAP);
 
         var roleCacheConfig = new CacheConfiguration();
         roleCacheConfig.setName(ROLE_CACHE_NAME);
-        roleCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
-        roleCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
-        roleCacheConfig.setMaxEntriesLocalHeap(MODEL_MAX_ENTRIES_IN_HEAP);
+        roleCacheConfig.setMemoryStoreEvictionPolicy(modelMemoryStoreEvictionPolicy);
+        roleCacheConfig.setTimeToLiveSeconds(modelLiveInCacheSeconds);
+        roleCacheConfig.setMaxEntriesLocalHeap(modelMaxEntriesInHeap);
         var rolesCacheConfig = new CacheConfiguration();
         rolesCacheConfig.setName(ROLES_CACHE_NAME);
-        rolesCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
-        rolesCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
+        rolesCacheConfig.setMemoryStoreEvictionPolicy(modelMemoryStoreEvictionPolicy);
+        rolesCacheConfig.setTimeToLiveSeconds(modelLiveInCacheSeconds);
         rolesCacheConfig.setMaxEntriesLocalHeap(SINGLE_ENTRY_IN_HEAP);
 
         var ehcacheConfiguration = new net.sf.ehcache.config.Configuration();

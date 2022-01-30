@@ -2,7 +2,6 @@ package ua.com.cyberdone.accountmicroservice.dto.account;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import ua.com.cyberdone.accountmicroservice.entity.Role;
 
 import java.util.Set;
 

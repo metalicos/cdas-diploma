@@ -143,7 +143,11 @@ public class AccountService {
             @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
             @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
-    public void deleteAccount(String username) {
+    public void deleteAccount(String username) throws NotFoundException {
+        var account = accountRepository.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Account not found."));
+        account.setRoles(null);
+        accountRepository.save(account);
         accountRepository.deleteByUsername(username);
         log.info("Account with 'username'='{}' is deleted", username);
         log.info("Delete caching for account={}", username);
@@ -154,9 +158,25 @@ public class AccountService {
             @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
             @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
+    public void deleteSelfAccount(String token) throws NotFoundException {
+        var username = jwtService.getUsername(token);
+        var account = accountRepository.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Account not found."));
+        account.setDeleted(true);
+        AccountUtils.fullyDisableAccount(account);
+        accountRepository.save(account);
+        log.info("User with 'username'='{}' deleted his account", username);
+        log.info("Delete caching for account={}", username);
+        log.info("Delete caching for accounts");
+    }
+
+    @Caching(evict = {
+            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
+            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
+    @Transactional
     public void deleteAllAccounts() {
         List<Account> accounts = accountRepository.findAll();
-        for (var acc: accounts){
+        for (var acc : accounts) {
             acc.setRoles(null);
             accountRepository.save(acc);
         }
@@ -218,7 +238,7 @@ public class AccountService {
             @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
             @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
-    public void changeAccountImage(String username, MultipartFile file) throws AlreadyExistException, NotFoundException, IOException {
+    public void changeAccountImage(String username, MultipartFile file) throws NotFoundException, IOException {
         var account = accountRepository.findByUsername(username).orElseThrow(
                 () -> new NotFoundException("Account not found."));
         account.setPhoto(file.getBytes());

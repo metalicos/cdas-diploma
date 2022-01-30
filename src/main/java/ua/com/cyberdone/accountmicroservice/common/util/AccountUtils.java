@@ -35,8 +35,12 @@ public final class AccountUtils {
         setupAvailable(account, true, true, true, true);
     }
 
-    public static void setupAvailable(Account account, boolean enabled, boolean credentialsNonExpired,
-                                      boolean nonExpired, boolean nonLocked) {
+    public static void fullyDisableAccount(Account account) {
+        setupAvailable(account, false, false, false, false);
+    }
+
+    private static void setupAvailable(Account account, boolean enabled, boolean credentialsNonExpired,
+                                       boolean nonExpired, boolean nonLocked) {
         account.setIsEnabled(enabled);
         account.setIsCredentialsNonExpired(credentialsNonExpired);
         account.setIsNonExpired(nonExpired);

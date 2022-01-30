@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ua.com.cyberdone.accountmicroservice.dto.role.RoleDto;
-import ua.com.cyberdone.accountmicroservice.entity.Role;
 
 import java.io.Serializable;
 import java.util.Set;

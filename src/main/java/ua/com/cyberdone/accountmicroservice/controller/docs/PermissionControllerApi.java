@@ -18,7 +18,8 @@ import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionsDto;
 public interface PermissionControllerApi {
 
     @Operation(summary = "Read permissions", description = "Return all permissions with pagination")
-    @ApiResponse(responseCode = "200", description = "Return permissions with pagination (page, size) / order 'direction' (ASC / DESC) / filter by word 'sortBy'",
+    @ApiResponse(responseCode = "200", description = "Return permissions with pagination (page, size) / " +
+            "order 'direction' (ASC / DESC) / filter by word 'sortBy'",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = PermissionsDto.class)))
     ResponseEntity<PermissionsDto> readPermissions(int page, int size, String direction, String sortBy);

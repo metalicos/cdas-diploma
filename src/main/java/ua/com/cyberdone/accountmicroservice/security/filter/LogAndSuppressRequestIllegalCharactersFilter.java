@@ -29,7 +29,8 @@ public class LogAndSuppressRequestIllegalCharactersFilter extends GenericFilterB
     private static final String[] INVALID_CHARACTERS_ARRAY = {"!", "$"};
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
         var httpServletResponse = (HttpServletResponse) response;
         var httpServletRequest = (HttpServletRequest) request;
         var requestUri = httpServletRequest.getRequestURI();

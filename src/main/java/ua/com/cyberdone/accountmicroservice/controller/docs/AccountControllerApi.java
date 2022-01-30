@@ -28,29 +28,37 @@ import java.io.IOException;
 @Tag(name = "Accounts", description = "Endpoints for managing accounts")
 public interface AccountControllerApi {
 
-    @Operation(summary = "Read Accounts", description = "Return all accounts with pagination")
-    @ApiResponse(responseCode = "200", description = "Return accounts with pagination (page, size) / order 'direction' (ASC / DESC) / filter by word 'sortBy'",
+    @Operation(summary = "Read accounts", description = "Return all accounts with pagination")
+    @ApiResponse(responseCode = "200", description = "Return accounts with pagination (page, size) / order " +
+            "'direction' (ASC / DESC) / filter by word 'sortBy'",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountsDto.class)))
-    ResponseEntity<AccountsDto> readAccounts(int page, int size, String direction, String sortBy) throws NotFoundException;
+    ResponseEntity<AccountsDto> readAccounts(int page, int size, String direction, String sortBy)
+            throws NotFoundException;
 
-    @Operation(summary = "Read Accounts", description = "Return account by username")
+    @Operation(summary = "Read accounts", description = "Return account by username")
     @ApiResponse(responseCode = "200", description = "Return account by username",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountDto.class)))
     ResponseEntity<AccountDto> readAccount(String username) throws NotFoundException;
 
-    @Operation(summary = "Delete Accounts", description = "Delete all accounts")
+    @Operation(summary = "Delete accounts", description = "Delete all accounts")
     @ApiResponse(responseCode = "200", description = "Delete all accounts",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
     ResponseEntity<String> deleteAccounts();
 
-    @Operation(summary = "Delete Account", description = "Delete account by username")
+    @Operation(summary = "Delete account", description = "Delete account by username")
     @ApiResponse(responseCode = "200", description = "Delete account by username",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> deleteAccount(String username);
+    ResponseEntity<String> deleteAccount(String username) throws NotFoundException;
+
+    @Operation(summary = "Delete self account", description = "Delete self account")
+    @ApiResponse(responseCode = "200", description = "Delete self account",
+            content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                    schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
+    ResponseEntity<String> deleteSelf(String token) throws NotFoundException;
 
     @Operation(summary = "Register new account", description = "Registration of a new account")
     @ApiResponse(responseCode = "200", description = "Registration of a new account",
@@ -59,7 +67,7 @@ public interface AccountControllerApi {
     ResponseEntity<AccountDto> createAccount(RegistrationDto registrationDto)
             throws AlreadyExistException, NotFoundException;
 
-    @Operation(summary = "Create Account", description = "Create the new account from another account")
+    @Operation(summary = "Create account", description = "Create the new account from another account")
     @ApiResponse(responseCode = "200", description = "Create the new account from another account",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountDto.class)))
@@ -82,7 +90,8 @@ public interface AccountControllerApi {
     @ApiResponse(responseCode = "200", description = "Change account's email",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> changeUsername(ChangeEmailDto changeEmailDto) throws NotFoundException, AlreadyExistException;
+    ResponseEntity<String> changeUsername(ChangeEmailDto changeEmailDto)
+            throws NotFoundException, AlreadyExistException;
 
     @Operation(summary = "Change image", description = "Change account's image")
     @ApiResponse(responseCode = "200", description = "Change account's image",
@@ -96,7 +105,8 @@ public interface AccountControllerApi {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(
                     implementation = TokenDto.class,
                     example = "{\n" +
-                            "    \"authToken\": \"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJvc3RhcC5qYUBnbWFpbC5jb20iLCJqdGkiOiIxIiwicm9sZXMiOiJbe1wiaWRcIjoxLFwiY3JlYXRlZFRpbWVzdGFtcFwiOlwiMjAyMi0wMS0yOVQxNTozNDozNy42NDI3MjNcIixcInJvbGVcIjpcIk9XTkVSXCIsXCJwZXJtaXNzaW9uc1wiOlt7XCJpZFwiOjEsXCJjcmVhdGVkVGltZXN0YW1wXCI6XCIyMDIyLTAxLTI5VDE1OjM0OjM3LjYyODY2NFwiLFwibmFtZVwiOlwiUmVhZCBBbGxcIixcInZhbHVlXCI6XCJyX2FsbFwifSx7XCJpZFwiOjIsXCJjcmVhdGVkVGltZXN0YW1wXCI6XCIyMDIyLTAxLTI5VDE1OjM0OjM3LjYyODY2NFwiLFwibmFtZVwiOlwiV3JpdGUgQWxsXCIsXCJ2YWx1ZVwiOlwid19hbGxcIn0se1wiaWRcIjozLFwiY3JlYXRlZFRpbWVzdGFtcFwiOlwiMjAyMi0wMS0yOVQxNTozNDozNy42Mjg2NjRcIixcIm5hbWVcIjpcIlVwZGF0ZSBBbGxcIixcInZhbHVlXCI6XCJ1X2FsbFwifSx7XCJpZFwiOjQsXCJjcmVhdGVkVGltZXN0YW1wXCI6XCIyMDIyLTAxLTI5VDE1OjM0OjM3LjYyODY2NFwiLFwibmFtZVwiOlwiRGVsZXRlIEFsbFwiLFwidmFsdWVcIjpcImRfYWxsXCJ9XX1dIiwiaWF0IjoxNjQzNDkwMzgyLCJleHAiOjE2NDM1NzY3ODJ9.Hs_bbclHC2v85YVgLsei5Daumz-JlXJ70zZOqslpLtVcFIk86iuJ2Z_3IUdAd-pm-KAFYIxbvtDVXC7ZK_2AXw\",\n" +
+                            "    \"authToken\": \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30." +
+                            "Et9HFtf9R3GEMA0IICOfFMVXY7kkTX1wr4qCyhIf58U\",\n" +
                             "    \"tokenLiveTimeInSeconds\": 86400\n" +
                             "}")))
     ResponseEntity<TokenDto> login(LoginDto loginDto) throws AuthenticationException;

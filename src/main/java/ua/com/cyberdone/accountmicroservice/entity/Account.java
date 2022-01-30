@@ -46,6 +46,9 @@ public class Account extends BasicSecurity {
     @Column(name = "password", length = 300, nullable = false)
     private String password;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
     @Lob
     @Column(name = "photo")
     private byte[] photo;
@@ -58,8 +61,12 @@ public class Account extends BasicSecurity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
         Account account = (Account) o;
         return getId() != null && Objects.equals(getId(), account.getId());
     }

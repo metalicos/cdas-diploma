@@ -75,8 +75,15 @@ public class AccountController implements AccountControllerApi {
 
     @DeleteMapping("/{username}")
     @PreAuthorize("hasAnyAuthority('d_all','d_account','d_self')")
-    public ResponseEntity<String> deleteAccount(@PathVariable String username) {
+    public ResponseEntity<String> deleteAccount(@PathVariable String username) throws NotFoundException {
         accountService.deleteAccount(username);
+        return ResponseEntity.ok(ControllerConstantUtils.OK);
+    }
+
+    @DeleteMapping("/self")
+    @PreAuthorize("hasAnyAuthority('d_self')")
+    public ResponseEntity<String> deleteSelf(@RequestHeader("Authorization") String token) throws NotFoundException {
+        accountService.deleteSelfAccount(token);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
 
