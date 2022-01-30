@@ -14,5 +14,5 @@ public class RegistrationDto {
     private String firstName;
     private String lastName;
     private String patronymic;
-    private Set<Role> roles;
+    private Set<String> roles;
 }

@@ -24,6 +24,8 @@ public class CyberdoneCachingConfig extends CachingConfigurerSupport {
     public static final String ACCOUNTS_CACHE_NAME = "ACCOUNTS_CACHE";
     public static final String PERMISSION_CACHE_NAME = "PERMISSION_CACHE";
     public static final String PERMISSIONS_CACHE_NAME = "PERMISSIONS_CACHE";
+    public static final String ROLE_CACHE_NAME = "ROLE_CACHE";
+    public static final String ROLES_CACHE_NAME = "ROLES_CACHE";
     private static final Long SINGLE_ENTRY_IN_HEAP = 1L;
     @Value("${cache.token.eviction-policy}")
     private String TOKEN_MEMORY_STORE_EVICTION_POLICY;
@@ -31,18 +33,13 @@ public class CyberdoneCachingConfig extends CachingConfigurerSupport {
     private Long TOKEN_LIVE_IN_CACHE_SECONDS;
     @Value("${cache.token.max-entries-in-heap}")
     private Long TOKEN_MAX_ENTRIES_IN_HEAP;
-    @Value("${cache.account.eviction-policy}")
-    private String ACCOUNT_MEMORY_STORE_EVICTION_POLICY;
-    @Value("${cache.account.time-to-live-seconds}")
-    private Long ACCOUNT_LIVE_IN_CACHE_SECONDS;
-    @Value("${cache.account.max-entries-in-heap}")
-    private Long ACCOUNT_MAX_ENTRIES_IN_HEAP;
-    @Value("${cache.permission.eviction-policy}")
-    private String PERMISSION_MEMORY_STORE_EVICTION_POLICY;
-    @Value("${cache.permission.time-to-live-seconds}")
-    private Long PERMISSION_LIVE_IN_CACHE_SECONDS;
-    @Value("${cache.permission.max-entries-in-heap}")
-    private Long PERMISSION_MAX_ENTRIES_IN_HEAP;
+
+    @Value("${cache.model.eviction-policy}")
+    private String MODEL_MEMORY_STORE_EVICTION_POLICY;
+    @Value("${cache.model.time-to-live-seconds}")
+    private Long MODEL_LIVE_IN_CACHE_SECONDS;
+    @Value("${cache.model.max-entries-in-heap}")
+    private Long MODEL_MAX_ENTRIES_IN_HEAP;
 
     @Bean
     net.sf.ehcache.CacheManager getEhcacheManager() {
@@ -54,25 +51,36 @@ public class CyberdoneCachingConfig extends CachingConfigurerSupport {
 
         var permissionCacheConfig = new CacheConfiguration();
         permissionCacheConfig.setName(PERMISSION_CACHE_NAME);
-        permissionCacheConfig.setMemoryStoreEvictionPolicy(PERMISSION_MEMORY_STORE_EVICTION_POLICY);
-        permissionCacheConfig.setTimeToLiveSeconds(PERMISSION_LIVE_IN_CACHE_SECONDS);
-        permissionCacheConfig.setMaxEntriesLocalHeap(PERMISSION_MAX_ENTRIES_IN_HEAP);
+        permissionCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
+        permissionCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
+        permissionCacheConfig.setMaxEntriesLocalHeap(MODEL_MAX_ENTRIES_IN_HEAP);
         var permissionsCacheConfig = new CacheConfiguration();
         permissionsCacheConfig.setName(PERMISSIONS_CACHE_NAME);
-        permissionsCacheConfig.setMemoryStoreEvictionPolicy(PERMISSION_MEMORY_STORE_EVICTION_POLICY);
-        permissionsCacheConfig.setTimeToLiveSeconds(PERMISSION_LIVE_IN_CACHE_SECONDS);
+        permissionsCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
+        permissionsCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
         permissionsCacheConfig.setMaxEntriesLocalHeap(SINGLE_ENTRY_IN_HEAP);
 
         var accountCacheConfig = new CacheConfiguration();
         accountCacheConfig.setName(ACCOUNT_CACHE_NAME);
-        accountCacheConfig.setMemoryStoreEvictionPolicy(ACCOUNT_MEMORY_STORE_EVICTION_POLICY);
-        accountCacheConfig.setTimeToLiveSeconds(ACCOUNT_LIVE_IN_CACHE_SECONDS);
-        accountCacheConfig.setMaxEntriesLocalHeap(ACCOUNT_MAX_ENTRIES_IN_HEAP);
+        accountCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
+        accountCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
+        accountCacheConfig.setMaxEntriesLocalHeap(MODEL_MAX_ENTRIES_IN_HEAP);
         var accountsCacheConfig = new CacheConfiguration();
         accountsCacheConfig.setName(ACCOUNTS_CACHE_NAME);
-        accountsCacheConfig.setMemoryStoreEvictionPolicy(ACCOUNT_MEMORY_STORE_EVICTION_POLICY);
-        accountsCacheConfig.setTimeToLiveSeconds(ACCOUNT_LIVE_IN_CACHE_SECONDS);
+        accountsCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
+        accountsCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
         accountsCacheConfig.setMaxEntriesLocalHeap(SINGLE_ENTRY_IN_HEAP);
+
+        var roleCacheConfig = new CacheConfiguration();
+        roleCacheConfig.setName(ROLE_CACHE_NAME);
+        roleCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
+        roleCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
+        roleCacheConfig.setMaxEntriesLocalHeap(MODEL_MAX_ENTRIES_IN_HEAP);
+        var rolesCacheConfig = new CacheConfiguration();
+        rolesCacheConfig.setName(ROLES_CACHE_NAME);
+        rolesCacheConfig.setMemoryStoreEvictionPolicy(MODEL_MEMORY_STORE_EVICTION_POLICY);
+        rolesCacheConfig.setTimeToLiveSeconds(MODEL_LIVE_IN_CACHE_SECONDS);
+        rolesCacheConfig.setMaxEntriesLocalHeap(SINGLE_ENTRY_IN_HEAP);
 
         var ehcacheConfiguration = new net.sf.ehcache.config.Configuration();
         ehcacheConfiguration.addCache(tokenCacheConfig);
@@ -80,6 +88,8 @@ public class CyberdoneCachingConfig extends CachingConfigurerSupport {
         ehcacheConfiguration.addCache(accountsCacheConfig);
         ehcacheConfiguration.addCache(permissionCacheConfig);
         ehcacheConfiguration.addCache(permissionsCacheConfig);
+        ehcacheConfiguration.addCache(roleCacheConfig);
+        ehcacheConfiguration.addCache(rolesCacheConfig);
 
         return net.sf.ehcache.CacheManager.newInstance(ehcacheConfiguration);
     }

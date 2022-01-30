@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
@@ -21,12 +22,16 @@ import ua.com.cyberdone.accountmicroservice.dto.account.ChangeFullNameDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangePasswordDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.RegistrationDto;
 import ua.com.cyberdone.accountmicroservice.entity.Account;
+import ua.com.cyberdone.accountmicroservice.entity.Role;
 import ua.com.cyberdone.accountmicroservice.mapper.AccountMapper;
 import ua.com.cyberdone.accountmicroservice.repository.AccountRepository;
 import ua.com.cyberdone.accountmicroservice.repository.RoleRepository;
 import ua.com.cyberdone.accountmicroservice.security.JwtService;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -84,20 +89,29 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountDto createAccountFromAnotherAccount(RegistrationDto registrationDto, String creatorsToken)
+    public AccountDto createAccountFromAnotherAccount(RegistrationDto dto, String creatorsToken)
             throws NotFoundException, AlreadyExistException, AccessDeniedException {
-        if (!accountRepository.existsByUsername(registrationDto.getUsername())) {
-            var account = new AccountMapper<RegistrationDto>(modelMapper).toEntity(registrationDto, Account.class);
+        if (!accountRepository.existsByUsername(dto.getUsername())) {
+            var roleSet = new HashSet<Role>();
+            for (var role : dto.getRoles()) {
+                roleSet.add(roleRepository.findByRole(role).orElseThrow(
+                        () -> new NotFoundException("Role=" + role + " is not found.")));
+            }
+            var newAccount = new AccountMapper<AccountDto>(modelMapper).toEntity(AccountDto.builder()
+                    .firstName(dto.getFirstName()).lastName(dto.getLastName())
+                    .patronymic(dto.getPatronymic()).username(dto.getUsername())
+                    .password(dto.getPassword()).build(), Account.class);
+            newAccount.setRoles(roleSet);
             var creatorsUserUsername = jwtService.getUsername(creatorsToken);
             var creatorsAccount = accountRepository.findByUsername(creatorsUserUsername).orElseThrow(
                     () -> new NotFoundException("Account creator is not found."));
             if (AccountUtils.permittedToCreateNewUser(creatorsAccount)) {
-                AccountUtils.setupAccount(passwordEncoder, account);
-                return createNewUser(account);
+                AccountUtils.setupAccount(passwordEncoder, newAccount);
+                return createNewUser(newAccount);
             }
             throw new AccessDeniedException("Account creator is not permitted to create new User");
         }
-        throw new AlreadyExistException("Account with username=" + registrationDto.getUsername() + " exists.");
+        throw new AlreadyExistException("Account with username=" + dto.getUsername() + " exists.");
     }
 
     @Transactional
@@ -116,6 +130,7 @@ public class AccountService {
     @Caching(evict = {
             @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
             @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
+    @Transactional
     public AccountDto createNewUser(Account account) {
         var savedAccount = accountRepository.save(account);
         var accountDto = new AccountMapper<AccountDto>(modelMapper).toDto(savedAccount, AccountDto.class);
@@ -140,6 +155,11 @@ public class AccountService {
             @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
     public void deleteAllAccounts() {
+        List<Account> accounts = accountRepository.findAll();
+        for (var acc: accounts){
+            acc.setRoles(null);
+            accountRepository.save(acc);
+        }
         accountRepository.deleteAll();
         log.info("All Accounts are deleted");
         log.info("Delete caching for account (all entries)");
@@ -191,6 +211,20 @@ public class AccountService {
         accountRepository.save(account);
         log.info("Account username is changed from '{}' to '{}'", dto.getOldEmail(), dto.getNewEmail());
         log.info("Delete caching for account={}", dto.getOldEmail());
+        log.info("Delete caching for accounts");
+    }
+
+    @Caching(evict = {
+            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
+            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
+    @Transactional
+    public void changeAccountImage(String username, MultipartFile file) throws AlreadyExistException, NotFoundException, IOException {
+        var account = accountRepository.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Account not found."));
+        account.setPhoto(file.getBytes());
+        accountRepository.save(account);
+        log.info("Account image successfully updated for account={}", username);
+        log.info("Delete caching for account={}", username);
         log.info("Delete caching for accounts");
     }
 }

@@ -31,11 +31,7 @@ cache:
     time-to-live-seconds: 600
     eviction-policy: LRU
     max-entries-in-heap: 100
-  account:
-    time-to-live-seconds: 600
-    eviction-policy: LRU
-    max-entries-in-heap: 100
-  permission:
+  model:
     time-to-live-seconds: 600
     eviction-policy: LRU
     max-entries-in-heap: 100

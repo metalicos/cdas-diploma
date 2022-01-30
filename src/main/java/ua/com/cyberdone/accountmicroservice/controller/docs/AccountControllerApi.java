@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 import ua.com.cyberdone.accountmicroservice.common.constant.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
@@ -23,7 +23,7 @@ import ua.com.cyberdone.accountmicroservice.dto.account.LogoutDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.RegistrationDto;
 import ua.com.cyberdone.accountmicroservice.dto.token.TokenDto;
 
-import javax.validation.Valid;
+import java.io.IOException;
 
 @Tag(name = "Accounts", description = "Endpoints for managing accounts")
 public interface AccountControllerApi {
@@ -70,22 +70,26 @@ public interface AccountControllerApi {
     @ApiResponse(responseCode = "200", description = "Change account's password",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto)
-            throws NotFoundException;
+    ResponseEntity<String> changePassword(ChangePasswordDto changePasswordDto) throws NotFoundException;
 
     @Operation(summary = "Change full name", description = "Change account's full name")
     @ApiResponse(responseCode = "200", description = "Change account's full name",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> changeFullName(@RequestBody @Valid ChangeFullNameDto changeFullNameDto)
-            throws NotFoundException;
+    ResponseEntity<String> changeFullName(ChangeFullNameDto changeFullNameDto) throws NotFoundException;
 
     @Operation(summary = "Change email", description = "Change account's email")
     @ApiResponse(responseCode = "200", description = "Change account's email",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> changeUsername(@RequestBody @Valid ChangeEmailDto changeEmailDto)
-            throws NotFoundException, AlreadyExistException;
+    ResponseEntity<String> changeUsername(ChangeEmailDto changeEmailDto) throws NotFoundException, AlreadyExistException;
+
+    @Operation(summary = "Change image", description = "Change account's image")
+    @ApiResponse(responseCode = "200", description = "Change account's image",
+            content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                    schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
+    ResponseEntity<String> changeImage(String username, MultipartFile file)
+            throws NotFoundException, IOException, AlreadyExistException;
 
     @Operation(summary = "Login to account", description = "Perform login operation to account")
     @ApiResponse(responseCode = "200", description = "Perform login operation to account",
@@ -95,7 +99,7 @@ public interface AccountControllerApi {
                             "    \"authToken\": \"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJvc3RhcC5qYUBnbWFpbC5jb20iLCJqdGkiOiIxIiwicm9sZXMiOiJbe1wiaWRcIjoxLFwiY3JlYXRlZFRpbWVzdGFtcFwiOlwiMjAyMi0wMS0yOVQxNTozNDozNy42NDI3MjNcIixcInJvbGVcIjpcIk9XTkVSXCIsXCJwZXJtaXNzaW9uc1wiOlt7XCJpZFwiOjEsXCJjcmVhdGVkVGltZXN0YW1wXCI6XCIyMDIyLTAxLTI5VDE1OjM0OjM3LjYyODY2NFwiLFwibmFtZVwiOlwiUmVhZCBBbGxcIixcInZhbHVlXCI6XCJyX2FsbFwifSx7XCJpZFwiOjIsXCJjcmVhdGVkVGltZXN0YW1wXCI6XCIyMDIyLTAxLTI5VDE1OjM0OjM3LjYyODY2NFwiLFwibmFtZVwiOlwiV3JpdGUgQWxsXCIsXCJ2YWx1ZVwiOlwid19hbGxcIn0se1wiaWRcIjozLFwiY3JlYXRlZFRpbWVzdGFtcFwiOlwiMjAyMi0wMS0yOVQxNTozNDozNy42Mjg2NjRcIixcIm5hbWVcIjpcIlVwZGF0ZSBBbGxcIixcInZhbHVlXCI6XCJ1X2FsbFwifSx7XCJpZFwiOjQsXCJjcmVhdGVkVGltZXN0YW1wXCI6XCIyMDIyLTAxLTI5VDE1OjM0OjM3LjYyODY2NFwiLFwibmFtZVwiOlwiRGVsZXRlIEFsbFwiLFwidmFsdWVcIjpcImRfYWxsXCJ9XX1dIiwiaWF0IjoxNjQzNDkwMzgyLCJleHAiOjE2NDM1NzY3ODJ9.Hs_bbclHC2v85YVgLsei5Daumz-JlXJ70zZOqslpLtVcFIk86iuJ2Z_3IUdAd-pm-KAFYIxbvtDVXC7ZK_2AXw\",\n" +
                             "    \"tokenLiveTimeInSeconds\": 86400\n" +
                             "}")))
-    ResponseEntity<TokenDto> login(@RequestBody @Valid LoginDto loginDto) throws AuthenticationException;
+    ResponseEntity<TokenDto> login(LoginDto loginDto) throws AuthenticationException;
 
     @Operation(summary = "Logout from account", description = "Perform logout operation from account")
     @ApiResponse(responseCode = "200", description = "Perform logout operation from account",
@@ -104,6 +108,5 @@ public interface AccountControllerApi {
                     example = "{\n" +
                             "    \"authToken\": \"\",\n" +
                             "}")))
-    ResponseEntity<TokenDto> logout(@RequestBody @Valid LogoutDto logoutDto)
-            throws NotFoundException, AlreadyExistException;
+    ResponseEntity<TokenDto> logout(LogoutDto logoutDto) throws NotFoundException, AlreadyExistException;
 }

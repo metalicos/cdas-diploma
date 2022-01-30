@@ -5,6 +5,8 @@ import org.modelmapper.ModelMapper;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
@@ -35,5 +37,20 @@ public abstract class AbstractMapper<Entity, Dto> {
             return Collections.emptyList();
         }
         return dtos.stream().map(dto -> toEntity(dto, clazz)).collect(toList());
+    }
+
+    public Set<Dto> toDtoSet(Set<Entity> accounts, Class<Dto> clazz) {
+        if (isNull(accounts) || accounts.isEmpty()) {
+            return Collections.emptySet();
+        }
+        return accounts.stream().map(entity -> toDto(entity, clazz))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Entity> toEntitySet(Set<Dto> dtos, Class<Entity> clazz) {
+        if (isNull(dtos) || dtos.isEmpty()) {
+            return Collections.emptySet();
+        }
+        return dtos.stream().map(dto -> toEntity(dto, clazz)).collect(Collectors.toSet());
     }
 }

@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import ua.com.cyberdone.accountmicroservice.common.constant.ControllerConstantUtils;
+import ua.com.cyberdone.accountmicroservice.common.constant.Regex;
 import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AuthenticationException;
@@ -33,6 +35,8 @@ import ua.com.cyberdone.accountmicroservice.service.AccountService;
 import ua.com.cyberdone.accountmicroservice.service.AuthenticationService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -109,6 +113,15 @@ public class AccountController implements AccountControllerApi {
     public ResponseEntity<String> changeUsername(@RequestBody @Valid ChangeEmailDto changeEmailDto)
             throws NotFoundException, AlreadyExistException {
         accountService.changeAccountUsername(changeEmailDto);
+        return ResponseEntity.ok(ControllerConstantUtils.OK);
+    }
+
+    @PutMapping("/{username}/change/image")
+    @PreAuthorize("hasAnyAuthority('u_all','u_images','u_self')")
+    public ResponseEntity<String> changeImage(@Pattern(regexp = Regex.EMAIL, message = Regex.EMAIL_FAIL_MESSAGE)
+                                              @PathVariable String username, @RequestParam MultipartFile file)
+            throws NotFoundException, IOException, AlreadyExistException {
+        accountService.changeAccountImage(username, file);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
 

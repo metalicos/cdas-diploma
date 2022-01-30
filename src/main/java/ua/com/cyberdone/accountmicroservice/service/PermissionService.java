@@ -39,7 +39,7 @@ public class PermissionService {
                 .totallyElements(permissionPage.getTotalElements())
                 .sortedBy("NONE")
                 .sortDirection("NONE")
-                .permissions(permissionPage.toSet())
+                .permissions(new PermissionMapper<PermissionDto>(modelMapper).toDtoSet(permissionPage.toSet(), PermissionDto.class))
                 .build();
     }
 
@@ -55,7 +55,7 @@ public class PermissionService {
                 .totallyElements(permissionPage.getTotalElements())
                 .sortedBy(sortBy)
                 .sortDirection(direction)
-                .permissions(permissionPage.toSet())
+                .permissions(new PermissionMapper<PermissionDto>(modelMapper).toDtoSet(permissionPage.toSet(), PermissionDto.class))
                 .build();
     }
 
