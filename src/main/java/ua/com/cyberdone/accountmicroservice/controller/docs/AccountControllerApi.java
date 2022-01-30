@@ -33,26 +33,27 @@ public interface AccountControllerApi {
             "'direction' (ASC / DESC) / filter by word 'sortBy'",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountsDto.class)))
-    ResponseEntity<AccountsDto> readAccounts(int page, int size, String direction, String sortBy)
+    ResponseEntity<AccountsDto> readAccounts(String token, int page, int size, String direction, String sortBy)
             throws NotFoundException;
 
-    @Operation(summary = "Read accounts", description = "Return account by username")
+    @Operation(summary = "Read account", description = "Return account by username")
     @ApiResponse(responseCode = "200", description = "Return account by username",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountDto.class)))
-    ResponseEntity<AccountDto> readAccount(String username) throws NotFoundException;
+    ResponseEntity<AccountDto> readAccount(String token, String username) throws NotFoundException;
 
     @Operation(summary = "Delete accounts", description = "Delete all accounts")
     @ApiResponse(responseCode = "200", description = "Delete all accounts",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> deleteAccounts();
+    ResponseEntity<String> deleteAccounts(String token);
 
     @Operation(summary = "Delete account", description = "Delete account by username")
     @ApiResponse(responseCode = "200", description = "Delete account by username",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> deleteAccount(String username) throws NotFoundException;
+    ResponseEntity<String> deleteAccount(String token, String username)
+            throws NotFoundException;
 
     @Operation(summary = "Delete self account", description = "Delete self account")
     @ApiResponse(responseCode = "200", description = "Delete self account",
@@ -71,7 +72,7 @@ public interface AccountControllerApi {
     @ApiResponse(responseCode = "200", description = "Create the new account from another account",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountDto.class)))
-    ResponseEntity<AccountDto> createAccount(RegistrationDto registrationDto, String token)
+    ResponseEntity<AccountDto> createAccount(String token, RegistrationDto registrationDto)
             throws AccessDeniedException, NotFoundException, AlreadyExistException;
 
     @Operation(summary = "Change password", description = "Change account's password")
@@ -84,20 +85,20 @@ public interface AccountControllerApi {
     @ApiResponse(responseCode = "200", description = "Change account's full name",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> changeFullName(ChangeFullNameDto changeFullNameDto) throws NotFoundException;
+    ResponseEntity<String> changeFullName(String token, ChangeFullNameDto changeFullNameDto) throws NotFoundException;
 
     @Operation(summary = "Change email", description = "Change account's email")
     @ApiResponse(responseCode = "200", description = "Change account's email",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> changeUsername(ChangeEmailDto changeEmailDto)
+    ResponseEntity<String> changeUsername(String token, ChangeEmailDto changeEmailDto)
             throws NotFoundException, AlreadyExistException;
 
     @Operation(summary = "Change image", description = "Change account's image")
     @ApiResponse(responseCode = "200", description = "Change account's image",
             content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> changeImage(String username, MultipartFile file)
+    ResponseEntity<String> changeImage(String token, String username, MultipartFile file)
             throws NotFoundException, IOException, AlreadyExistException;
 
     @Operation(summary = "Login to account", description = "Perform login operation to account")
@@ -118,5 +119,6 @@ public interface AccountControllerApi {
                     example = "{\n" +
                             "    \"authToken\": \"\",\n" +
                             "}")))
-    ResponseEntity<TokenDto> logout(LogoutDto logoutDto) throws NotFoundException, AlreadyExistException;
+    ResponseEntity<TokenDto> logout(String token, LogoutDto logoutDto)
+            throws NotFoundException, AlreadyExistException;
 }
