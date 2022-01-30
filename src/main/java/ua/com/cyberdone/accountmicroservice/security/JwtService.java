@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountDto;
+import ua.com.cyberdone.accountmicroservice.dto.role.RoleDto;
 import ua.com.cyberdone.accountmicroservice.dto.token.TokenDto;
 import ua.com.cyberdone.accountmicroservice.entity.Role;
 
@@ -62,7 +63,7 @@ public class JwtService {
 
     public String generateToken(AccountDto accountDto) throws JsonProcessingException {
         Claims claims = Jwts.claims().setSubject(accountDto.getUsername()).setId(accountDto.getId() + "");
-        claims.put("roles", mapper.writeValueAsString(accountDto.getRoles().toArray(new Role[0])));
+        claims.put("roles", mapper.writeValueAsString(accountDto.getRoles().toArray(new RoleDto[0])));
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(generateCurrentDate())
