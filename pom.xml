@@ -175,6 +175,12 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <outputFileName>openapi.json</outputFileName>
+                    <apiDocsUrl>http://localhost:5051/v3/api-docs</apiDocsUrl>
+                    <outputDir>${project.build.directory}</outputDir>
+                    <goal>generate</goal>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.flywaydb</groupId>
