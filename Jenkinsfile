@@ -1,9 +1,23 @@
 pipeline {
     agent any
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
-        stage('Stage 1') {
+        stage('Build') {
+            withMaven {
+                  sh "mvn clean verify"
+            }
+        }
+        stage('Test'){
             steps {
-                echo 'Hello world!'
+                sh 'make check'
+                junit 'reports/**/*.xml'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'make publish'
             }
         }
     }
