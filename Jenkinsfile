@@ -1,31 +1,35 @@
+#!groovy
+properties([disableConcurrentBuilds()])
 pipeline {
     agent any
     options {
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         skipStagesAfterUnstable()
+        timestamps()
     }
     stages {
         stage('Build') {
-            echo "=============================== STARTING BUILD ====================================="
             steps{
-                withMaven(maven: 'maven-latest') {
-                      sh "mvn clean verify"
-                }
+                echo "=============================== STARTING BUILD ====================================="
+//                 withMaven(maven: 'maven-latest') {
+//                       sh "mvn clean verify"
+//                 }
+                echo "=============================== BUILD SUCCESSFUL ==================================="
             }
-            echo "=============================== BUILD SUCCESSFUL ==================================="
         }
         stage('Test'){
-            echo "=============================== STARTING TESTS ====================================="
             steps {
+                echo "=============================== STARTING TESTS ====================================="
                 echo "Test stage works fine!"
+                echo "=============================== TESTS ARE SUCCESSFUL ==============================="
             }
-            echo "=============================== TESTS ARE SUCCESSFUL ==============================="
         }
         stage('Deploy') {
-            echo "=============================== STARTING DEPLOY ===================================="
             steps {
+                echo "=============================== STARTING DEPLOY ===================================="
                 echo "Deploy stage works fine!"
+                echo "=============================== DEPLOY SUCCESSFUL =================================="
             }
-            echo "=============================== DEPLOY SUCCESSFUL =================================="
         }
     }
 }
