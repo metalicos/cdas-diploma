@@ -2,6 +2,9 @@
 properties([disableConcurrentBuilds()])
 pipeline {
     agent any
+    triggers{
+        pollSCM('* * * * *') // every 1 minute
+    }
     options {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         skipDefaultCheckout(true)
