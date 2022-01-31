@@ -37,7 +37,7 @@ pipeline {
     stage('Run Docker Image') {
       steps {
         echo "=============================== STARTING DEPLOY ===================================="
-        bat "docker run -dp 80:5051 account-microservice"
+        bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=cdas-micro account-microservice"
         echo "=============================== DEPLOY SUCCESSFUL =================================="
       }
     }
