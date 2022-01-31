@@ -9,7 +9,7 @@ pipeline {
         timestamps()
     }
     stages {
-        stage('However I want to name a stage') {
+        stage('Prepare') {
             steps {
                 checkout scm
             }
