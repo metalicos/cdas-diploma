@@ -4,7 +4,7 @@ properties([disableConcurrentBuilds()])
 pipeline {
   agent any
   triggers {
-    pollSCM('* * * * *') // every 1 minute
+    pollSCM('* * * * *')
   }
   options {
     buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
@@ -34,7 +34,7 @@ pipeline {
         echo "======================== DOCKER IMAGE CREATION IS SUCCESSFUL ======================="
       }
     }
-    stage('Deploy') {
+    stage('Run Docker Image') {
       steps {
         echo "=============================== STARTING DEPLOY ===================================="
         bat "docker run -dp 80:5051 account-microservice"
