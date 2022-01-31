@@ -1,45 +1,45 @@
 #!groovy
+
 properties([disableConcurrentBuilds()])
 pipeline {
-    agent any
-    triggers{
-        pollSCM('* * * * *') // every 1 minute
+  agent any
+  triggers {
+    pollSCM('* * * * *') // every 1 minute
+  }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+    skipDefaultCheckout(true)
+    skipStagesAfterUnstable()
+    timestamps()
+  }
+  stages {
+    stage('Prepare') {
+      steps {
+        checkout scm
+      }
     }
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
-        skipDefaultCheckout(true)
-        skipStagesAfterUnstable()
-        timestamps()
+    stage('Build') {
+      steps {
+        echo "=============================== STARTING BUILD ====================================="
+        withMaven(maven: 'maven-latest') {
+          bat "mvn clean install"
+        }
+        echo "=============================== BUILD SUCCESSFUL ==================================="
+      }
     }
-    stages {
-        stage('Prepare') {
-            steps {
-                checkout scm
-            }
-        }
-        stage('Build') {
-            steps{
-                echo "=============================== STARTING BUILD ====================================="
-                withMaven(maven: 'maven-latest') {
-                        echo pwd()
-                        bat "mvn clean verify"
-                }
-                echo "=============================== BUILD SUCCESSFUL ==================================="
-            }
-        }
-        stage('Test'){
-            steps {
-                echo "=============================== STARTING TESTS ====================================="
-                echo "Test stage works fine!"
-                echo "=============================== TESTS ARE SUCCESSFUL ==============================="
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo "=============================== STARTING DEPLOY ===================================="
-                echo "Deploy stage works fine!"
-                echo "=============================== DEPLOY SUCCESSFUL =================================="
-            }
-        }
+    stage('Create Docker Image') {
+      steps {
+        echo "========================== STARTING DOCKER IMAGE CREATION =========================="
+        bat "docker build -t account-microservice ."
+        echo "======================== DOCKER IMAGE CREATION IS SUCCESSFUL ======================="
+      }
     }
+    stage('Deploy') {
+      steps {
+        echo "=============================== STARTING DEPLOY ===================================="
+        bat "docker run -dp 80:5051 getting-started"
+        echo "=============================== DEPLOY SUCCESSFUL =================================="
+      }
+    }
+  }
 }
