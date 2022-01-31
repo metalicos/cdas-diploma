@@ -3,7 +3,7 @@
 properties([disableConcurrentBuilds()])
 pipeline {
   agent any
-  pom = readMavenPom file: 'pom.xml'
+  def pom = readMavenPom file: 'pom.xml'
   triggers {
     pollSCM('* * * * *')
   }
