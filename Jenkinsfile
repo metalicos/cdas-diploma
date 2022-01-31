@@ -21,7 +21,9 @@ pipeline {
             steps{
                 echo "=============================== STARTING BUILD ====================================="
                 withMaven(maven: 'maven-latest') {
-                      sh "mvn clean verify"
+                        def workspace = pwd()
+                        echo workspace
+                        sh "mvn clean verify"
                 }
                 echo "=============================== BUILD SUCCESSFUL ==================================="
             }
