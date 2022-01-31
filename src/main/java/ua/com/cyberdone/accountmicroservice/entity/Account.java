@@ -56,6 +56,9 @@ public class Account extends BasicSecurity {
     @Column(name = "created_by")
     private Long createdBy;
 
+    @Column(name = "deleted_by")
+    private Long deletedBy;
+
     @Lob
     @Column(name = "photo")
     private byte[] photo;

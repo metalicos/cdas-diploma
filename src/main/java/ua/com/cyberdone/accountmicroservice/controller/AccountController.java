@@ -75,11 +75,19 @@ public class AccountController implements AccountControllerApi {
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
 
+    @DeleteMapping("/{username}/permanent")
+    @PreAuthorize("hasAnyAuthority('d_all','d_account','d_self')")
+    public ResponseEntity<String> permanentDeleteAccount(@RequestHeader("Authorization") String token,
+                                                @PathVariable String username) {
+        accountService.permanentDeleteAccount(username);
+        return ResponseEntity.ok(ControllerConstantUtils.OK);
+    }
+
     @DeleteMapping("/{username}")
     @PreAuthorize("hasAnyAuthority('d_all','d_account','d_self')")
     public ResponseEntity<String> deleteAccount(@RequestHeader("Authorization") String token,
                                                 @PathVariable String username) throws NotFoundException {
-        accountService.deleteAccount(username);
+        accountService.deleteAccount(username, token);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
 

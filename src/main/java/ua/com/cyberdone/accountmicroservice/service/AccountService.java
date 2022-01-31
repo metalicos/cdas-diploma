@@ -143,11 +143,28 @@ public class AccountService {
             @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
             @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
-    public void deleteAccount(String username) throws NotFoundException {
-        var account = accountRepository.findByUsername(username).orElseThrow(
-                () -> new NotFoundException("Account not found."));
+    public void permanentDeleteAccount(String username) {
         accountRepository.deleteByUsername(username);
         log.info("Account with 'username'='{}' is deleted", username);
+        log.info("Delete caching for account={}", username);
+        log.info("Delete caching for accounts");
+    }
+
+    @Caching(evict = {
+            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
+            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
+    @Transactional
+    public void deleteAccount(String username, String token) throws NotFoundException {
+        var deletedByUsername = jwtService.getUsername(token);
+        var account = accountRepository.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Account not found."));
+        var accountDeletedBy = accountRepository.findByUsername(deletedByUsername).orElseThrow(
+                () -> new NotFoundException("Account of person that started deletion is not found."));
+        account.setDeleted(true);
+        account.setDeletedBy(accountDeletedBy.getId());
+        AccountUtils.fullyDisableAccount(account);
+        accountRepository.save(account);
+        log.info("User with 'username'='{}' deleted his account", username);
         log.info("Delete caching for account={}", username);
         log.info("Delete caching for accounts");
     }

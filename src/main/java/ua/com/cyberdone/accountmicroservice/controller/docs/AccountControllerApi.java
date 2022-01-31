@@ -48,6 +48,12 @@ public interface AccountControllerApi {
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
     ResponseEntity<String> deleteAccounts(String token);
 
+    @Operation(summary = "Delete account (permanent)", description = "Delete account by username (permanent)")
+    @ApiResponse(responseCode = "200", description = "Delete account by username (permanent)",
+            content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                    schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
+    ResponseEntity<String> permanentDeleteAccount(String token, String username);
+
     @Operation(summary = "Delete account", description = "Delete account by username")
     @ApiResponse(responseCode = "200", description = "Delete account by username",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
