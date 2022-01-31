@@ -31,7 +31,6 @@ import ua.com.cyberdone.accountmicroservice.security.JwtService;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -107,6 +106,7 @@ public class AccountService {
                     () -> new NotFoundException("Account creator is not found."));
             if (AccountUtils.permittedToCreateNewUser(creatorsAccount)) {
                 AccountUtils.setupAccount(passwordEncoder, newAccount);
+                newAccount.setCreatedBy(creatorsAccount.getId());
                 return createNewUser(newAccount);
             }
             throw new AccessDeniedException("Account creator is not permitted to create new User");
@@ -146,8 +146,6 @@ public class AccountService {
     public void deleteAccount(String username) throws NotFoundException {
         var account = accountRepository.findByUsername(username).orElseThrow(
                 () -> new NotFoundException("Account not found."));
-        account.setRoles(null);
-        accountRepository.save(account);
         accountRepository.deleteByUsername(username);
         log.info("Account with 'username'='{}' is deleted", username);
         log.info("Delete caching for account={}", username);
@@ -175,11 +173,6 @@ public class AccountService {
             @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
     public void deleteAllAccounts() {
-        List<Account> accounts = accountRepository.findAll();
-        for (var acc : accounts) {
-            acc.setRoles(null);
-            accountRepository.save(acc);
-        }
         accountRepository.deleteAll();
         log.info("All Accounts are deleted");
         log.info("Delete caching for account (all entries)");
@@ -243,6 +236,7 @@ public class AccountService {
                 () -> new NotFoundException("Account not found."));
         account.setPhoto(file.getBytes());
         accountRepository.save(account);
+        log.info("Account image successfully updated for account={}", username);
         log.info("Account image successfully updated for account={}", username);
         log.info("Delete caching for account={}", username);
         log.info("Delete caching for accounts");
