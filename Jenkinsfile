@@ -3,7 +3,6 @@
 properties([disableConcurrentBuilds()])
 pipeline {
   agent any
-  def pom = readMavenPom file: 'pom.xml'
   triggers {
     pollSCM('* * * * *')
   }
@@ -16,6 +15,7 @@ pipeline {
   stages {
     stage('Prepare') {
       steps {
+        def pom = readMavenPom file: 'pom.xml'
         echo pom.version
         checkout scm
       }
