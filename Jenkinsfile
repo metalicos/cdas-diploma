@@ -5,27 +5,27 @@ pipeline {
     }
     stages {
         stage('Build') {
-            println "=============================== STARTING BUILD ====================================="
+            echo "=============================== STARTING BUILD ====================================="
             steps{
-                withMaven {
+                withMaven(maven: 'maven-latest') {
                       sh "mvn clean verify"
                 }
             }
-            println "=============================== BUILD SUCCESSFUL ==================================="
+            echo "=============================== BUILD SUCCESSFUL ==================================="
         }
         stage('Test'){
-            println "=============================== STARTING TESTS ====================================="
+            echo "=============================== STARTING TESTS ====================================="
             steps {
                 echo "Test stage works fine!"
             }
-            println "=============================== TESTS ARE SUCCESSFUL ==============================="
+            echo "=============================== TESTS ARE SUCCESSFUL ==============================="
         }
         stage('Deploy') {
-            println "=============================== STARTING DEPLOY ===================================="
+            echo "=============================== STARTING DEPLOY ===================================="
             steps {
                 echo "Deploy stage works fine!"
             }
-            println "=============================== DEPLOY SUCCESSFUL =================================="
+            echo "=============================== DEPLOY SUCCESSFUL =================================="
         }
     }
 }
