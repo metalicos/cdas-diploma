@@ -22,7 +22,7 @@ pipeline {
                 echo "=============================== STARTING BUILD ====================================="
                 withMaven(maven: 'maven-latest') {
                         echo pwd()
-                        sh "mvn clean verify"
+                        bat "mvn clean verify"
                 }
                 echo "=============================== BUILD SUCCESSFUL ==================================="
             }
