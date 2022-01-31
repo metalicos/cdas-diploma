@@ -20,9 +20,9 @@ pipeline {
         stage('Build') {
             steps{
                 echo "=============================== STARTING BUILD ====================================="
-//                 withMaven(maven: 'maven-latest') {
-//                       sh "mvn clean verify"
-//                 }
+                withMaven(maven: 'maven-latest') {
+                      sh "mvn clean verify"
+                }
                 echo "=============================== BUILD SUCCESSFUL ==================================="
             }
         }
