@@ -34,5 +34,4 @@ build/
 .vscode/
 mvnw
 mvnw.cmd
-checkstyle.xml
 AccountMicroservice.iml
