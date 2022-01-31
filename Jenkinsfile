@@ -37,7 +37,7 @@ pipeline {
     stage('Deploy') {
       steps {
         echo "=============================== STARTING DEPLOY ===================================="
-        bat "docker run -dp 80:5051 getting-started"
+        bat "docker run -dp 80:5051 account-microservice"
         echo "=============================== DEPLOY SUCCESSFUL =================================="
       }
     }
