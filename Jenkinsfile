@@ -6,6 +6,10 @@ pipeline {
   triggers {
     pollSCM('* * * * *')
   }
+  environment {
+    IMAGE = readMavenPom().getArtifactId()
+    VERSION = readMavenPom().getVersion()
+  }
   options {
     buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
     skipDefaultCheckout(true)
@@ -15,8 +19,8 @@ pipeline {
   stages {
     stage('Prepare') {
       steps {
-        def pom = readMavenPom file: 'pom.xml'
-        echo pom.version
+        echo IMAGE
+        echo VERSION
         checkout scm
       }
     }
