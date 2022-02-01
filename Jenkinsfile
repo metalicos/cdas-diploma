@@ -9,6 +9,7 @@ pipeline {
   environment {
     IMAGE = readMavenPom().getArtifactId().toLowerCase()
     VERSION = readMavenPom().getVersion().toLowerCase()
+    BUILD = $BUILD_NUMBER
   }
   options {
     buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
@@ -36,7 +37,7 @@ pipeline {
     stage('Create Docker Image') {
       steps {
         echo "========================== STARTING DOCKER IMAGE CREATION =========================="
-        bat "docker build -t ${IMAGE}:${VERSION} -t ${IMAGE}:latest ."
+        bat "docker build -t ${IMAGE}-${BUILD}:${VERSION} -t ${IMAGE}:latest ."
         echo "======================== DOCKER IMAGE CREATION IS SUCCESSFUL ======================="
       }
     }
@@ -51,7 +52,7 @@ pipeline {
           } catch (Exception e) {
             echo "None ${IMAGE} running containers found, continue."
           }
-          bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=${IMAGE}-${VERSION} ${IMAGE}"
+          bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=${IMAGE}-${VERSION} ${IMAGE}-${BUILD}"
           echo "=============================== DEPLOY SUCCESSFUL =================================="
         }
       }
