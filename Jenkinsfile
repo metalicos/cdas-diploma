@@ -37,7 +37,6 @@ pipeline {
         echo "========================== STARTING DOCKER IMAGE CREATION =========================="
         bat "docker build -t ${IMAGE}:${VERSION} ."
         bat "docker tag ${IMAGE}:${VERSION} ${IMAGE}:latest"
-//         bat "docker build -t cyberdone/${IMAGE}-${VERSION} ."
         echo "======================== DOCKER IMAGE CREATION IS SUCCESSFUL ======================="
       }
     }
@@ -45,18 +44,18 @@ pipeline {
       steps {
         echo "=============================== STARTING DEPLOY ===================================="
         script {
-          def containerIdThatRunning = bat (
+          String containerIdThatRunning = bat (
             returnStdout: true,
-            script: "docker ps -q --filter name=${IMAGE}:${VERSION}"
+            script: "docker ps -q --filter name=${IMAGE}"
           ).trim()
           echo containerIdThatRunning
           if (containerIdThatRunning != null && containerIdThatRunning != "") {
-            bat "docker stop ${IMAGE}:${VERSION}"
-            echo "${IMAGE}:${VERSION} container is stopped"
-            bat "docker rm ${IMAGE}:${VERSION}"
-            echo "${IMAGE}:${VERSION} container is removed"
+            bat "docker stop ${IMAGE}"
+            echo "${IMAGE} container is stopped"
+            bat "docker rm ${IMAGE}"
+            echo "${IMAGE} container is removed"
           }
-          bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=${IMAGE}:${VERSION} ${IMAGE}:${VERSION}"
+          bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=${IMAGE} ${IMAGE}"
           echo "${IMAGE}-${VERSION} container started"
           echo "=============================== DEPLOY SUCCESSFUL =================================="
         }
