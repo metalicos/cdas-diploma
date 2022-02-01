@@ -49,6 +49,10 @@ pipeline {
             script: "docker ps -q --filter name=${IMAGE}-${VERSION}"
           ).trim()
           echo containerIdThatRunning
+          if (nonNull(containerIdThatRunning)) {
+            bat "docker stop ${IMAGE}-${VERSION}"
+            bat "docker remove ${IMAGE}-${VERSION}"
+          }
           bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=${IMAGE}-${VERSION} ${IMAGE}-${VERSION}"
           echo "=============================== DEPLOY SUCCESSFUL =================================="
         }
