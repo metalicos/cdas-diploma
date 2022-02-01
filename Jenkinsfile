@@ -36,7 +36,7 @@ pipeline {
     stage('Create Docker Image') {
       steps {
         echo "========================== STARTING DOCKER IMAGE CREATION =========================="
-        bat "docker build -t ${IMAGE}:${VERSION} ."
+        bat "docker build -t ${IMAGE}:${VERSION} -t ${IMAGE}:latest ."
         echo "======================== DOCKER IMAGE CREATION IS SUCCESSFUL ======================="
       }
     }
