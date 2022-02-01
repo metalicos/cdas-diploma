@@ -43,12 +43,11 @@ pipeline {
       steps {
         echo "=============================== STARTING DEPLOY ===================================="
         script {
-          String containerIdThatRunning = bat (
-            returnStdout: true,
+          String containerIdThatRunning = bat ( returnStdout: true,
             script: "docker ps -q --filter name=${IMAGE}-${VERSION}"
-          ).trim()
+          )
           echo containerIdThatRunning
-          if (containerIdThatRunning?.trim()) {
+          if (containerIdThatRunning !== null && containerIdThatRunning.trim() != "".trim()) {
             bat "docker stop ${IMAGE}-${VERSION}"
             echo "${IMAGE}-${VERSION} container is stopped"
             bat "docker rm ${IMAGE}-${VERSION}"
