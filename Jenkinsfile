@@ -1,4 +1,5 @@
 #!groovy
+
 properties([disableConcurrentBuilds()])
 pipeline {
   agent any
@@ -44,13 +45,13 @@ pipeline {
         echo "=============================== STARTING DEPLOY ===================================="
         script {
           try {
-              def containerIdThatRunning = bat(returnStdout: true, script: "docker ps -q --filter name=${IMAGE}-${VERSION}")
-              bat "docker stop ${IMAGE}-${VERSION}"
-              echo "${IMAGE}-${VERSION} container is stopped"
-              bat "docker rm ${IMAGE}-${VERSION}"
-              echo "${IMAGE}-${VERSION} container is removed"
+            def containerIdThatRunning = bat(returnStdout: true, script: "docker ps -q --filter name=${IMAGE}-${VERSION}")
+            bat "docker stop ${IMAGE}-${VERSION}"
+            echo "${IMAGE}-${VERSION} container is stopped"
+            bat "docker rm ${IMAGE}-${VERSION}"
+            echo "${IMAGE}-${VERSION} container is removed"
           } catch (Exception e) {
-              echo "None ${IMAGE}-${VERSION} running containers found, continue."
+            echo "None ${IMAGE}-${VERSION} running containers found, continue."
           }
           bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=${IMAGE}-${VERSION} ${IMAGE}-${VERSION}"
           echo "${IMAGE}-${VERSION} container started"
