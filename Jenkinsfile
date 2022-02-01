@@ -36,7 +36,7 @@ pipeline {
     stage('Create Docker Image') {
       steps {
         echo "========================== STARTING DOCKER IMAGE CREATION =========================="
-        bat "docker build -t ${IMAGE}-${VERSION}:${VERSION} ."
+        bat "docker build -t cyberdone/${IMAGE}-${VERSION}:${VERSION} ."
         echo "======================== DOCKER IMAGE CREATION IS SUCCESSFUL ======================="
       }
     }
@@ -53,7 +53,7 @@ pipeline {
           } catch (Exception e) {
             echo "None ${IMAGE}-${VERSION} running containers found, continue."
           }
-          bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=${IMAGE}-${VERSION} ${IMAGE}-${VERSION}"
+          bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=${IMAGE}-${VERSION} cyberdone/${IMAGE}-${VERSION}"
           echo "${IMAGE}-${VERSION} container started"
           echo "=============================== DEPLOY SUCCESSFUL =================================="
         }
