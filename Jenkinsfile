@@ -52,7 +52,7 @@ pipeline {
           if (containerIdThatRunning != null && containerIdThatRunning != "") {
             bat "docker stop ${IMAGE}-${VERSION}"
             echo "${IMAGE}-${VERSION} container is stopped"
-            bat "docker remove ${IMAGE}-${VERSION}"
+            bat "docker rm ${IMAGE}-${VERSION}"
             echo "${IMAGE}-${VERSION} container is removed"
           }
           bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=${IMAGE}-${VERSION} ${IMAGE}-${VERSION}"
