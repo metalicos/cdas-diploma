@@ -47,7 +47,7 @@ pipeline {
             script: "docker ps -q --filter name=${IMAGE}-${VERSION}"
           )
           echo containerIdThatRunning
-          if (containerIdThatRunning !== null && containerIdThatRunning.trim() != "".trim()) {
+          if (containerIdThatRunning !== null && !containerIdThatRunning.trim().equals("".trim())) {
             bat "docker stop ${IMAGE}-${VERSION}"
             echo "${IMAGE}-${VERSION} container is stopped"
             bat "docker rm ${IMAGE}-${VERSION}"
