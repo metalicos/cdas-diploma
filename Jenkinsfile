@@ -56,7 +56,7 @@ pipeline {
           -e CDAS_DB_USERNAME=${CDAS_DB_USERNAME} \
           -e CDAS_DB_URL=${CDAS_DB_URL} \
           -e JWT_SECRET=${JWT_SECRET} \
-          -p 80:5051 \
+          -p 7070:5051 \
           --name=${IMAGE}-${VERSION} ${IMAGE}-${BUILD_NUMBER}""")
           echo "=============================== DEPLOY SUCCESSFUL =================================="
         }
