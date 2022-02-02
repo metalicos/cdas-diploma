@@ -28,7 +28,6 @@ import static java.util.Objects.nonNull;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
-
     public static final String BEARER = "Bearer ";
     private final ObjectMapper mapper;
     @Value("${security.jwt-secret}")
@@ -38,18 +37,6 @@ public class JwtService {
 
     public String getUsername(String token) {
         return extractClaim(token, Claims::getSubject);
-    }
-
-    public long getUserId(String token) {
-        return Long.parseLong(extractClaim(token, Claims::getId));
-    }
-
-    public Date getExpirationDate(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
-
-    public Boolean isTokenExpired(String token) {
-        return getExpirationDate(token).before(new Date());
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -70,10 +57,6 @@ public class JwtService {
                 .setExpiration(generateExpirationDate())
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
-    }
-
-    public Role[] getRoles(String token) {
-        return extractAllClaims(token).get("roles", Role[].class);
     }
 
     public Date generateExpirationDate() {
