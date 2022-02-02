@@ -51,7 +51,13 @@ pipeline {
           } catch (Exception e) {
             echo "None ${IMAGE} running containers found, continue."
           }
-          bat "docker run -d -t -i -e DB_PASSWORD=${DB_PASSWORD} -e DB_USERNAME=${DB_USERNAME} -e DB_URL=${DB_URL} -e JWT_SECRET=${JWT_SECRET} -p 80:5051 --name=${IMAGE}-${VERSION} ${IMAGE}-${BUILD_NUMBER}"
+          bat("""docker run -d -t -i \
+          -e CDAS_DB_PASSWORD=${CDAS_DB_PASSWORD} \
+          -e CDAS_DB_USERNAME=${CDAS_DB_USERNAME} \
+          -e CDAS_DB_URL=${CDAS_DB_URL} \
+          -e JWT_SECRET=${JWT_SECRET} \
+          -p 80:5051 \
+          --name=${IMAGE}-${VERSION} ${IMAGE}-${BUILD_NUMBER}""")
           echo "=============================== DEPLOY SUCCESSFUL =================================="
         }
       }

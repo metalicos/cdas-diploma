@@ -187,9 +187,9 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <configuration>
-                    <user>${DB_USERNAME}</user>
-                    <password>${DB_PASSWORD}</password>
-                    <url>${DB_URL}</url>
+                    <user>${CDAS_DB_USERNAME}</user>
+                    <password>${CDAS_DB_PASSWORD}</password>
+                    <url>${CDAS_DB_URL}</url>
                 </configuration>
             </plugin>
             <plugin>
