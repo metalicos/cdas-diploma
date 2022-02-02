@@ -7,8 +7,10 @@ pipeline {
     pollSCM('* * * * *')
   }
   environment {
-    IMAGE = readMavenPom().getArtifactId().toLowerCase()
-    VERSION = readMavenPom().getVersion().toLowerCase()
+//     IMAGE = readMavenPom().getArtifactId().toLowerCase()
+//     VERSION = readMavenPom().getVersion().toLowerCase()
+    IMAGE = ""
+    VERSION = ""
   }
   options {
     buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
