@@ -7,10 +7,15 @@ pipeline {
     pollSCM('* * * * *')
   }
   environment {
-//     IMAGE = readMavenPom().getArtifactId().toLowerCase()
-//     VERSION = readMavenPom().getVersion().toLowerCase()
-    IMAGE = ""
-    VERSION = ""
+    try{
+      IMAGE = ""
+      VERSION = ""
+      IMAGE = readMavenPom().getArtifactId().toLowerCase()
+      VERSION = readMavenPom().getVersion().toLowerCase()
+    }catch(Exception ex){
+      echo "First run - no pom.file yet because we before Prepare step"
+      FIRST_RUN = true;
+    }
   }
   options {
     buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
@@ -21,9 +26,13 @@ pipeline {
   stages {
     stage('Prepare') {
       steps {
+        checkout scm
+        if(FIRST_RUN){
+          IMAGE = readMavenPom().getArtifactId().toLowerCase()
+          VERSION = readMavenPom().getVersion().toLowerCase()
+        }
         echo IMAGE
         echo VERSION
-        checkout scm
       }
     }
     stage('Build') {
