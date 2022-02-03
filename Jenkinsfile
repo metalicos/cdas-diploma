@@ -46,7 +46,7 @@ pipeline {
       steps {
         echo "=============================== STARTING DEPLOY ===================================="
         script {
-          int CONTAINERS_NUM = 2;
+          int CONTAINERS_NUM = 1;
           for ( int i = 0; i < CONTAINERS_NUM; i++ ) {
             try {
               bat "docker stop ${IMAGE}_" + i + "-${VERSION}"
