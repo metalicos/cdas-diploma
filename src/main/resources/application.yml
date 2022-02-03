@@ -21,6 +21,9 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+eureka:
+  instance:
+    hostname: 192.168.1.100
 cache:
   token:
     time-to-live-seconds: 600
@@ -30,7 +33,6 @@ cache:
     time-to-live-seconds: 600
     eviction-policy: LRU
     max-entries-in-heap: 100
-
 security:
   jwt-secret: ${JWT_SECRET}
   jwt-expiration-time-ms: 86400000 #24 hours 86400000
