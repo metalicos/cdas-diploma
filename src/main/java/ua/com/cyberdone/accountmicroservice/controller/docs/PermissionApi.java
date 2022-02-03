@@ -15,36 +15,36 @@ import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionDto;
 import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionsDto;
 
 @Tag(name = "Permissions", description = "Endpoints for managing account permissions")
-public interface PermissionControllerApi {
+public interface PermissionApi {
 
     @Operation(summary = "Read permissions", description = "Return all permissions with pagination")
     @ApiResponse(responseCode = "200", description = "Return permissions with pagination (page, size) / " +
             "order 'direction' (ASC / DESC) / filter by word 'sortBy'",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = PermissionsDto.class)))
-    ResponseEntity<PermissionsDto> readPermissions(int page, int size, String direction, String sortBy);
+    ResponseEntity<PermissionsDto> readPermissions(String token, int page, int size, String direction, String sortBy);
 
     @Operation(summary = "Read permission", description = "Return single permission by name")
     @ApiResponse(responseCode = "200", description = "Return single permission by name",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = PermissionDto.class)))
-    ResponseEntity<PermissionDto> readPermission(String name) throws NotFoundException;
+    ResponseEntity<PermissionDto> readPermission(String token, String name) throws NotFoundException;
 
     @Operation(summary = "Delete permissions", description = "Delete all permission")
     @ApiResponse(responseCode = "200", description = "Delete all permission",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> deletePermissions();
+    ResponseEntity<String> deletePermissions(String token);
 
     @Operation(summary = "Delete permission", description = "Delete permission by name")
     @ApiResponse(responseCode = "200", description = "Delete account by username",
             content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                     schema = @Schema(implementation = String.class, example = ControllerConstantUtils.OK)))
-    ResponseEntity<String> deletePermission(String name);
+    ResponseEntity<String> deletePermission(String token, String name);
 
     @Operation(summary = "Create permission", description = "Create the new permission")
     @ApiResponse(responseCode = "200", description = "Create the new permission",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = PermissionDto.class)))
-    ResponseEntity<PermissionDto> createPermission(CreatePermissionDto dto) throws AlreadyExistException;
+    ResponseEntity<PermissionDto> createPermission(String token, CreatePermissionDto dto) throws AlreadyExistException;
 }

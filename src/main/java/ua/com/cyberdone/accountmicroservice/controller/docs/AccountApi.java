@@ -26,7 +26,7 @@ import ua.com.cyberdone.accountmicroservice.dto.token.TokenDto;
 import java.io.IOException;
 
 @Tag(name = "Accounts", description = "Endpoints for managing accounts")
-public interface AccountControllerApi {
+public interface AccountApi {
 
     @Operation(summary = "Read accounts", description = "Return all accounts with pagination")
     @ApiResponse(responseCode = "200", description = "Return accounts with pagination (page, size) / order " +

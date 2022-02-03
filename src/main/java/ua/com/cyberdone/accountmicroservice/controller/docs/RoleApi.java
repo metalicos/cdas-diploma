@@ -15,7 +15,7 @@ import ua.com.cyberdone.accountmicroservice.dto.role.RoleDto;
 import ua.com.cyberdone.accountmicroservice.dto.role.RolesDto;
 
 @Tag(name = "Roles", description = "Endpoints for managing roles")
-public interface RoleControllerApi {
+public interface RoleApi {
 
     @Operation(summary = "Read roles", description = "Return all roles with pagination")
     @ApiResponse(responseCode = "200", description = "Return roles with pagination (page, size) / order " +

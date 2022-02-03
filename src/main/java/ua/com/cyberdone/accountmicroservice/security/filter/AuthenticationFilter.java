@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @Slf4j
 @RequiredArgsConstructor
 public abstract class AuthenticationFilter extends OncePerRequestFilter {
-
-    public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
     protected final JwtService jwtService;
     protected final UserDetailsService userDetailsService;
