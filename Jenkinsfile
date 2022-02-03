@@ -69,9 +69,6 @@
 //   }
 // }
 
-
-#!groovy
-
 properties([disableConcurrentBuilds()])
 pipeline {
   agent any
