@@ -68,6 +68,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"ValidationException\",\n" +
                     "   \"detail\": \"Parameter 'token' must be not null.\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<RestError> validationException(ValidationException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -85,6 +86,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"HttpClientErrorException\",\n" +
                     "   \"detail\": \"Clients request is of the wrong format. \",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<RestError> httpClientErrorException(HttpClientErrorException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -102,6 +104,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"MethodArgumentNotValidException\",\n" +
                     "   \"detail\": \"Method argument is invalid.\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RestError> httpClientErrorException(MethodArgumentNotValidException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -122,6 +125,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"MethodArgumentTypeMismatchException\",\n" +
                     "   \"detail\": \"Method argument`s type is invalid.\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<RestError> httpClientErrorException(MethodArgumentTypeMismatchException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -140,6 +144,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"MissingServletRequestParameterException\",\n" +
                     "   \"detail\": \"Request parameter is missing\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<RestError> httpClientErrorException(MissingServletRequestParameterException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -157,6 +162,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"HttpMessageNotReadableException\",\n" +
                     "   \"detail\": \"Request parameter is missing\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<RestError> httpClientErrorException(HttpMessageNotReadableException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -174,6 +180,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"AuthenticationException\",\n" +
                     "   \"detail\": \"Authentication failed: ...\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<RestError> noHandlerFoundException(AuthenticationException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -191,6 +198,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"ExpiredJwtException\",\n" +
                     "   \"detail\": \"JWT token is expired: ...\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<RestError> noHandlerFoundException(ExpiredJwtException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -208,6 +216,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"SignatureException\",\n" +
                     "   \"detail\": \"Bad JWT Signature:  ...\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<RestError> noHandlerFoundException(SignatureException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -225,6 +234,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"MalformedJwtException\",\n" +
                     "   \"detail\": \"Malformed Jwt:  ...\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<RestError> noHandlerFoundException(MalformedJwtException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -242,6 +252,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"UnsupportedJwtException\",\n" +
                     "   \"detail\": \"Unsupported Jwt:  ...\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnsupportedJwtException.class)
     public ResponseEntity<RestError> noHandlerFoundException(UnsupportedJwtException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -259,6 +270,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"AccessDeniedException\",\n" +
                     "   \"detail\": \"You have no permission to access the resource\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<RestError> noHandlerFoundException(AccessDeniedException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -268,7 +280,6 @@ public class ExceptionHandlerController {
                 .build(), HttpStatus.FORBIDDEN);
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
@@ -277,6 +288,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"NoHandlerFoundException\",\n" +
                     "   \"detail\": \"Resource not found for http://host:port/example/url\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<RestError> noHandlerFoundException(NoHandlerFoundException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -294,6 +306,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"NotFoundException\",\n" +
                     "   \"detail\": \"Unsupported Jwt:  ...\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<RestError> noHandlerFoundException(NotFoundException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -311,6 +324,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"AlreadyExistException\",\n" +
                     "   \"detail\": \"Account already exists  ...\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(AlreadyExistException.class)
     public ResponseEntity<RestError> noHandlerFoundException(AlreadyExistException exception) {
         return new ResponseEntity<>(RestError.builder()
@@ -328,6 +342,7 @@ public class ExceptionHandlerController {
                     "   \"exception\": \"InternalException\",\n" +
                     "   \"detail\": \"Server have problems to process your request\",\n" +
                     "}")))
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(InternalException.class)
     public ResponseEntity<RestError> httpClientErrorException(InternalException exception) {
         return new ResponseEntity<>(RestError.builder()
