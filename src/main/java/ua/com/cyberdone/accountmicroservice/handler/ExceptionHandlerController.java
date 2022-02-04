@@ -41,13 +41,14 @@ public class ExceptionHandlerController {
     public static final String ACCESS_DENIED_MSG = "Access denied";
     public static final String NO_CONTENT_MSG = "The resource is null or empty";
     public static final String METHOD_NOT_ALLOWED_MSG = "Operation with resource not allowed";
+    public static final String CONFLICT_MSG = "Resource have a conflict with existing one in the system";
     public static final String UNAUTHORIZED_MSG = "You are unauthorized.";
 
 
     @ApiResponse(responseCode = "204", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"status\": \"NO_CONTENT\",\n" +
+                    "   \"title\": \"" + NO_CONTENT_MSG + "\",\n" +
                     "   \"error\": \"204\",\n" +
                     "   \"exception\": \"NullPointerException\",\n" +
                     "   \"detail\": \"The resource is null or empty\",\n" +
@@ -67,7 +68,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"title\": \"BAD_REQUEST\",\n" +
+                    "   \"title\": \"" + BAD_REQUEST_MSG + "\",\n" +
                     "   \"error\": \"400\",\n" +
                     "   \"exception\": \"ValidationException\",\n" +
                     "   \"detail\": \"Parameter 'token' must be not null.\",\n" +
@@ -87,7 +88,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"title\": \"BAD_REQUEST\",\n" +
+                    "   \"title\": \"" + BAD_REQUEST_MSG + "\",\n" +
                     "   \"error\": \"400\",\n" +
                     "   \"exception\": \"HttpClientErrorException\",\n" +
                     "   \"detail\": \"Clients request is of the wrong format. \",\n" +
@@ -108,7 +109,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"title\": \"BAD_REQUEST\",\n" +
+                    "   \"title\": \"" + BAD_REQUEST_MSG + "\",\n" +
                     "   \"error\": \"400\",\n" +
                     "   \"exception\": \"MethodArgumentNotValidException\",\n" +
                     "   \"detail\": \"Method argument is invalid.\",\n" +
@@ -131,7 +132,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"title\": \"BAD_REQUEST\",\n" +
+                    "   \"title\": \"" + BAD_REQUEST_MSG + "\",\n" +
                     "   \"error\": \"400\",\n" +
                     "   \"exception\": \"MethodArgumentTypeMismatchException\",\n" +
                     "   \"detail\": \"Method argument`s type is invalid.\",\n" +
@@ -152,7 +153,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"title\": \"BAD_REQUEST\",\n" +
+                    "   \"title\": \"" + BAD_REQUEST_MSG + "\",\n" +
                     "   \"error\": \"400\",\n" +
                     "   \"exception\": \"MissingServletRequestParameterException\",\n" +
                     "   \"detail\": \"Request parameter is missing\",\n" +
@@ -172,7 +173,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"title\": \"BAD_REQUEST\",\n" +
+                    "   \"title\": \"" + BAD_REQUEST_MSG + "\",\n" +
                     "   \"error\": \"400\",\n" +
                     "   \"exception\": \"HttpMessageNotReadableException\",\n" +
                     "   \"detail\": \"Request parameter is missing\",\n" +
@@ -192,7 +193,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"status\": \"UNAUTHORIZED\",\n" +
+                    "   \"title\": \"" + UNAUTHORIZED_MSG + "\",\n" +
                     "   \"error\": \"401\",\n" +
                     "   \"exception\": \"AuthenticationException\",\n" +
                     "   \"detail\": \"Authentication failed: ...\",\n" +
@@ -212,7 +213,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"status\": \"UNAUTHORIZED\",\n" +
+                    "   \"title\": \"" + UNAUTHORIZED_MSG + "\",\n" +
                     "   \"error\": \"401\",\n" +
                     "   \"exception\": \"ExpiredJwtException\",\n" +
                     "   \"detail\": \"JWT token is expired: ...\",\n" +
@@ -232,7 +233,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"status\": \"UNAUTHORIZED\",\n" +
+                    "   \"title\": \"" + UNAUTHORIZED_MSG + "\",\n" +
                     "   \"error\": \"401\",\n" +
                     "   \"exception\": \"SignatureException\",\n" +
                     "   \"detail\": \"Bad JWT Signature:  ...\",\n" +
@@ -252,7 +253,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"status\": \"UNAUTHORIZED\",\n" +
+                    "   \"title\": \"" + UNAUTHORIZED_MSG + "\",\n" +
                     "   \"error\": \"401\",\n" +
                     "   \"exception\": \"MalformedJwtException\",\n" +
                     "   \"detail\": \"Malformed Jwt:  ...\",\n" +
@@ -272,7 +273,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"title\": \"UNAUTHORIZED\",\n" +
+                    "   \"title\": \"" + UNAUTHORIZED_MSG + "\",\n" +
                     "   \"error\": \"401\",\n" +
                     "   \"exception\": \"UnsupportedJwtException\",\n" +
                     "   \"detail\": \"Unsupported Jwt:  ...\",\n" +
@@ -292,7 +293,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "403", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"status\": \"FORBIDDEN\",\n" +
+                    "   \"title\": \"" + ACCESS_DENIED_MSG + "\",\n" +
                     "   \"error\": \"403\",\n" +
                     "   \"exception\": \"AccessDeniedException\",\n" +
                     "   \"detail\": \"You have no permission to access the resource\",\n" +
@@ -312,10 +313,10 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"status\": \"NOT_FOUND\",\n" +
+                    "   \"title\": \"" + NOT_FOUND_MSG + "\",\n" +
                     "   \"error\": \"404\",\n" +
                     "   \"exception\": \"NoHandlerFoundException\",\n" +
-                    "   \"detail\": \"Resource not found for http://host:port/example/url\",\n" +
+                    "   \"detail\": \"Unsupported Jwt:  ...\",\n" +
                     "}")))
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
@@ -332,7 +333,7 @@ public class ExceptionHandlerController {
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"title\": \"NOT_FOUND\",\n" +
+                    "   \"title\": \"" + NOT_FOUND_MSG + "\",\n" +
                     "   \"error\": \"404\",\n" +
                     "   \"exception\": \"NotFoundException\",\n" +
                     "   \"detail\": \"Unsupported Jwt:  ...\",\n" +
@@ -349,30 +350,30 @@ public class ExceptionHandlerController {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ApiResponse(responseCode = "405", content = @Content(schema = @Schema(
+    @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"title\": \"METHOD_NOT_ALLOWED\",\n" +
-                    "   \"error\": \"405\",\n" +
+                    "   \"title\": \"" + CONFLICT_MSG + "\",\n" +
+                    "   \"error\": \"409\",\n" +
                     "   \"exception\": \"AlreadyExistException\",\n" +
                     "   \"detail\": \"Account already exists  ...\",\n" +
                     "}")))
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(AlreadyExistException.class)
     public ResponseEntity<RestError> noHandlerFoundException(AlreadyExistException exception) {
         var error = RestError.builder()
-                .error(HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase())
-                .title(METHOD_NOT_ALLOWED_MSG)
+                .error(HttpStatus.CONFLICT.getReasonPhrase())
+                .title(CONFLICT_MSG)
                 .detail(exception.getMessage())
                 .build();
         log.error("{}", error);
-        return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(
             example = "{\n" +
                     "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-                    "   \"title\": \"INTERNAL_SERVER_ERROR\",\n" +
+                    "   \"title\": \"" + INTERNAL_SERVER_ERROR_MSG + "\",\n" +
                     "   \"error\": \"500\",\n" +
                     "   \"exception\": \"InternalException\",\n" +
                     "   \"detail\": \"Server have problems to process your request\",\n" +
