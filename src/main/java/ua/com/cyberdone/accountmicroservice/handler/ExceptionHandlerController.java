@@ -7,6 +7,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -30,6 +31,7 @@ import ua.com.cyberdone.accountmicroservice.dto.RestError;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @ControllerAdvice
 @RequestMapping(value = "/error", method = RequestMethod.GET)
 public class ExceptionHandlerController {
@@ -53,11 +55,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<RestError> noHandlerFoundException(NullPointerException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.NO_CONTENT.getReasonPhrase())
                 .title(NO_CONTENT_MSG)
                 .detail(exception.getMessage())
-                .build(), HttpStatus.NO_CONTENT);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.NO_CONTENT);
     }
 
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
@@ -71,11 +75,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<RestError> validationException(ValidationException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .title(BAD_REQUEST_MSG)
                 .detail("Validation failed. " + exception)
-                .build(), HttpStatus.BAD_REQUEST);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
@@ -89,11 +95,14 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<RestError> httpClientErrorException(HttpClientErrorException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .title(BAD_REQUEST_MSG)
                 .detail("Clients request is of the wrong format. " + exception.getMessage())
-                .build(), HttpStatus.BAD_REQUEST);
+                .build();
+        log.error("{}", error);
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
@@ -107,14 +116,16 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RestError> httpClientErrorException(MethodArgumentNotValidException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .title(BAD_REQUEST_MSG)
                 .detail(String.format("Invalid parameters '%s'. %s",
                         exception.getBindingResult().getFieldErrors().stream()
                                 .map(e -> "'" + e.getField() + "'->'" + e.getRejectedValue() + "'")
                                 .collect(Collectors.toSet()), exception.getMessage()))
-                .build(), HttpStatus.BAD_REQUEST);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
@@ -128,12 +139,14 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<RestError> httpClientErrorException(MethodArgumentTypeMismatchException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .title(BAD_REQUEST_MSG)
                 .detail(String.format("Invalid url parameter '%s' has been sent. %s", exception.getName(),
                         exception.getMessage()))
-                .build(), HttpStatus.BAD_REQUEST);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
@@ -147,11 +160,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<RestError> httpClientErrorException(MissingServletRequestParameterException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .title(BAD_REQUEST_MSG)
                 .detail("Request parameter is missing" + exception)
-                .build(), HttpStatus.BAD_REQUEST);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(
@@ -165,11 +180,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<RestError> httpClientErrorException(HttpMessageNotReadableException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .title(BAD_REQUEST_MSG)
                 .detail(exception.getMessage())
-                .build(), HttpStatus.BAD_REQUEST);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(
@@ -183,11 +200,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<RestError> noHandlerFoundException(AuthenticationException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .title(UNAUTHORIZED_MSG)
                 .detail("Authentication failed: " + exception.getMessage())
-                .build(), HttpStatus.UNAUTHORIZED);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(
@@ -201,11 +220,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<RestError> noHandlerFoundException(ExpiredJwtException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .title(UNAUTHORIZED_MSG)
                 .detail("JWT token is expired: " + exception.getMessage())
-                .build(), HttpStatus.UNAUTHORIZED);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(
@@ -219,11 +240,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<RestError> noHandlerFoundException(SignatureException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .title(UNAUTHORIZED_MSG)
                 .detail("Bad JWT Signature: " + exception.getMessage())
-                .build(), HttpStatus.UNAUTHORIZED);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(
@@ -237,11 +260,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<RestError> noHandlerFoundException(MalformedJwtException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .title(UNAUTHORIZED_MSG)
                 .detail("Malformed Jwt: " + exception.getMessage())
-                .build(), HttpStatus.UNAUTHORIZED);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
     @ApiResponse(responseCode = "401", content = @Content(schema = @Schema(
@@ -255,11 +280,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnsupportedJwtException.class)
     public ResponseEntity<RestError> noHandlerFoundException(UnsupportedJwtException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .title(UNAUTHORIZED_MSG)
                 .detail("Unsupported Jwt: " + exception.getMessage())
-                .build(), HttpStatus.UNAUTHORIZED);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
     @ApiResponse(responseCode = "403", content = @Content(schema = @Schema(
@@ -273,11 +300,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<RestError> noHandlerFoundException(AccessDeniedException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.FORBIDDEN.getReasonPhrase())
                 .title(ACCESS_DENIED_MSG)
                 .detail("You have no permission to access the resource ..." + exception.getMessage())
-                .build(), HttpStatus.FORBIDDEN);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(
@@ -291,11 +320,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<RestError> noHandlerFoundException(NoHandlerFoundException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.NOT_FOUND.getReasonPhrase())
                 .title(NOT_FOUND_MSG)
                 .detail("Resource not found for " + exception.getRequestURL())
-                .build(), HttpStatus.NOT_FOUND);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(
@@ -309,11 +340,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<RestError> noHandlerFoundException(NotFoundException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.NOT_FOUND.getReasonPhrase())
                 .title(NOT_FOUND_MSG)
                 .detail(exception.getMessage())
-                .build(), HttpStatus.NOT_FOUND);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ApiResponse(responseCode = "405", content = @Content(schema = @Schema(
@@ -327,11 +360,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(AlreadyExistException.class)
     public ResponseEntity<RestError> noHandlerFoundException(AlreadyExistException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase())
                 .title(METHOD_NOT_ALLOWED_MSG)
                 .detail(exception.getMessage())
-                .build(), HttpStatus.METHOD_NOT_ALLOWED);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(
@@ -345,11 +380,13 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(InternalException.class)
     public ResponseEntity<RestError> httpClientErrorException(InternalException exception) {
-        return new ResponseEntity<>(RestError.builder()
+        var error = RestError.builder()
                 .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
                 .title(INTERNAL_SERVER_ERROR_MSG)
                 .detail(exception.getMessage())
-                .build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                .build();
+        log.error("{}", error);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 //    @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(
