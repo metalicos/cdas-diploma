@@ -9,8 +9,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ua.com.cyberdone.accountmicroservice.dto.role.RoleDto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Set;
+
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.EMAIL_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.EMAIL_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.FIRST_NAME_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.LAST_NAME_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.NAME_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.PASSWORD_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.PASSWORD_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.PATRONYMIC_FAIL_MESSAGE;
 
 @Data
 @Builder
@@ -55,14 +66,24 @@ import java.util.Set;
         "}")
 public class AccountDto implements Serializable {
     private Long id;
+    @Pattern(regexp = EMAIL_RGX,
+            message = EMAIL_FAIL_MESSAGE)
     private String username;
+    @Pattern(regexp = PASSWORD_RGX,
+            message = PASSWORD_FAIL_MESSAGE)
+    @JsonIgnore
+    private String password;
+    @Pattern(regexp = NAME_RGX,
+            message = FIRST_NAME_FAIL_MESSAGE)
     private String firstName;
+    @Pattern(regexp = NAME_RGX,
+            message = LAST_NAME_FAIL_MESSAGE)
     private String lastName;
+    @Pattern(regexp = NAME_RGX,
+            message = PATRONYMIC_FAIL_MESSAGE)
     private String patronymic;
     private Boolean isEnabled;
     @JsonIgnore
-    private String password;
-    @JsonIgnore
     private Byte[] photo;
-    private Set<RoleDto> roles;
+    private Set<@Valid RoleDto> roles;
 }

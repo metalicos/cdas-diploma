@@ -3,9 +3,15 @@ package ua.com.cyberdone.accountmicroservice.dto.account;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import ua.com.cyberdone.accountmicroservice.common.constant.Regex;
 
 import javax.validation.constraints.Pattern;
+
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.EMAIL_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.EMAIL_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.FIRST_NAME_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.LAST_NAME_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.NAME_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.PATRONYMIC_FAIL_MESSAGE;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -16,19 +22,19 @@ import javax.validation.constraints.Pattern;
         "    \"patronymic\": \"D'Amanti\"\n" +
         "}")
 public class ChangeFullNameDto {
-    @Pattern(regexp = Regex.EMAIL,
-            message = Regex.EMAIL_FAIL_MESSAGE)
+    @Pattern(regexp = EMAIL_RGX,
+            message = EMAIL_FAIL_MESSAGE)
     private String username;
 
-    @Pattern(regexp = Regex.FIRST_NAME,
-            message = Regex.FIRST_NAME_FAIL_MESSAGE)
+    @Pattern(regexp = NAME_RGX,
+            message = FIRST_NAME_FAIL_MESSAGE)
     private String firstName;
 
-    @Pattern(regexp = Regex.LAST_NAME,
-            message = Regex.LAST_NAME_FAIL_MESSAGE)
+    @Pattern(regexp = NAME_RGX,
+            message = LAST_NAME_FAIL_MESSAGE)
     private String lastName;
 
-    @Pattern(regexp = Regex.PATRONYMIC,
-            message = Regex.PATRONYMIC_FAIL_MESSAGE)
+    @Pattern(regexp = NAME_RGX,
+            message = PATRONYMIC_FAIL_MESSAGE)
     private String patronymic;
 }

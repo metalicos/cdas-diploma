@@ -5,7 +5,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionDto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import java.util.Set;
+
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.ROLE_NAME_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.ROLE_NAME_RGX;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -37,6 +42,7 @@ import java.util.Set;
         "}")
 public class RoleDto {
     private Long id;
+    @Pattern(regexp = ROLE_NAME_RGX, message = ROLE_NAME_FAIL_MESSAGE)
     private String role;
-    private Set<PermissionDto> permissions;
+    private Set<@Valid PermissionDto> permissions;
 }

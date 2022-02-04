@@ -39,6 +39,7 @@ import javax.validation.constraints.Pattern;
 import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.EMAIL_RGX;
 
 @Slf4j
 @RestController
@@ -141,7 +142,7 @@ public class AccountController implements AccountApi {
     @PutMapping("/{username}/change/image")
     @PreAuthorize("hasAnyAuthority('u_all','u_images','u_self')")
     public ResponseEntity<String> changeImage(@RequestHeader(AUTHORIZATION) String token,
-                                              @Pattern(regexp = Regex.EMAIL, message = Regex.EMAIL_FAIL_MESSAGE)
+                                              @Pattern(regexp = EMAIL_RGX, message = Regex.EMAIL_FAIL_MESSAGE)
                                               @PathVariable String username, @RequestParam MultipartFile file)
             throws NotFoundException, IOException, AlreadyExistException {
         accountService.changeAccountImage(username, file);
