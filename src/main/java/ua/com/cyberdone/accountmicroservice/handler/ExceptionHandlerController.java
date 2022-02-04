@@ -40,7 +40,6 @@ public class ExceptionHandlerController {
     public static final String NOT_FOUND_MSG = "Resource not found";
     public static final String ACCESS_DENIED_MSG = "Access denied";
     public static final String NO_CONTENT_MSG = "The resource is null or empty";
-    public static final String METHOD_NOT_ALLOWED_MSG = "Operation with resource not allowed";
     public static final String CONFLICT_MSG = "Resource have a conflict with existing one in the system";
     public static final String UNAUTHORIZED_MSG = "You are unauthorized.";
 
