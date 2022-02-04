@@ -389,22 +389,4 @@ public class ExceptionHandlerController {
         log.error("{}", error);
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-//    @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(
-//            example = "{\n" +
-//                    "   \"timestamp\": \"2022-01-29T10:10:10.324Z\",\n" +
-//                    "   \"title\": \"INTERNAL_SERVER_ERROR\",\n" +
-//                    "   \"error\": \"500\",\n" +
-//                    "   \"exception\": \"Exception\",\n" +
-//                    "   \"detail\": \"Server has problems to process your request\",\n" +
-//                    "}")))
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<RestError> httpClientErrorException(Exception exception) {
-//        return new ResponseEntity<>(RestError.builder()
-//                .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-//                .title(INTERNAL_SERVER_ERROR_MSG)
-//                .detail(exception.getMessage())
-//                .build(), HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 }
