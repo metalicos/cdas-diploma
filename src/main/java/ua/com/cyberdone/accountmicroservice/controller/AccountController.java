@@ -80,7 +80,7 @@ public class AccountController implements AccountApi {
     @DeleteMapping("/{username}/permanent")
     @PreAuthorize("hasAnyAuthority('d_all','d_account','d_self')")
     public ResponseEntity<String> permanentDeleteAccount(@RequestHeader(AUTHORIZATION) String token,
-                                                @PathVariable String username) {
+                                                         @PathVariable String username) {
         accountService.permanentDeleteAccount(username);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
@@ -101,14 +101,14 @@ public class AccountController implements AccountApi {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<AccountDto> createAccount(@RequestBody RegistrationDto registrationDto)
+    public ResponseEntity<AccountDto> createAccount(@RequestBody @Valid RegistrationDto registrationDto)
             throws AlreadyExistException, NotFoundException {
         return ResponseEntity.ok(accountService.createAccount(registrationDto));
     }
 
     @PostMapping("/create")
     public ResponseEntity<AccountDto> createAccount(@RequestHeader(AUTHORIZATION) String token,
-                                                    @RequestBody RegistrationDto registrationDto)
+                                                    @RequestBody @Valid RegistrationDto registrationDto)
             throws AccessDeniedException, NotFoundException, AlreadyExistException {
         return ResponseEntity.ok(accountService.createAccountFromAnotherAccount(registrationDto, token));
     }
