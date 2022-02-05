@@ -36,6 +36,9 @@ public class RegistrationDto {
     @Pattern(regexp = PASSWORD_RGX,
             message = PASSWORD_FAIL_MESSAGE)
     private String password;
+    @Pattern(regexp = PASSWORD_RGX,
+            message = PASSWORD_FAIL_MESSAGE)
+    private String passwordCheck;
     @Pattern(regexp = NAME_RGX,
             message = FIRST_NAME_FAIL_MESSAGE)
     private String firstName;

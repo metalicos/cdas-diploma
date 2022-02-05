@@ -17,7 +17,6 @@ import org.springframework.util.StringUtils;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountDto;
 import ua.com.cyberdone.accountmicroservice.dto.role.RoleDto;
 import ua.com.cyberdone.accountmicroservice.dto.token.TokenDto;
-import ua.com.cyberdone.accountmicroservice.entity.Role;
 
 import java.util.Date;
 import java.util.function.Function;

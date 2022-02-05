@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.cyberdone.accountmicroservice.common.constant.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedException;
@@ -25,6 +26,8 @@ import ua.com.cyberdone.accountmicroservice.dto.token.TokenDto;
 
 import java.io.IOException;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @Tag(name = "Accounts", description = "Endpoints for managing accounts")
 public interface AccountApi {
 
@@ -41,6 +44,12 @@ public interface AccountApi {
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountDto.class)))
     ResponseEntity<AccountDto> readAccount(String token, String username) throws NotFoundException;
+
+    @Operation(summary = "Read self account", description = "Return account by user token")
+    @ApiResponse(responseCode = "200", description = "Return account by user token",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = AccountDto.class)))
+    ResponseEntity<AccountDto> readSelfAccount(@RequestHeader(AUTHORIZATION) String token) throws NotFoundException;
 
     @Operation(summary = "Delete accounts", description = "Delete all accounts")
     @ApiResponse(responseCode = "200", description = "Delete all accounts",

@@ -87,6 +87,10 @@ public class AccountService {
         return new AccountMapper<AccountDto>(modelMapper).toDto(account, AccountDto.class);
     }
 
+    public AccountDto getSelfAccount(String token) throws NotFoundException {
+        return getAccount(jwtService.getUsername(token));
+    }
+
     @Transactional
     public AccountDto createAccountFromAnotherAccount(RegistrationDto dto, String creatorsToken)
             throws NotFoundException, AlreadyExistException, AccessDeniedException {
@@ -150,6 +154,11 @@ public class AccountService {
         log.info("Delete caching for accounts");
     }
 
+    public void deleteSelfAccount(String token) throws NotFoundException {
+        var username = jwtService.getUsername(token);
+        deleteAccount(username, token);
+    }
+
     @Caching(evict = {
             @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
             @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
@@ -158,26 +167,13 @@ public class AccountService {
         var deletedByUsername = jwtService.getUsername(token);
         var account = accountRepository.findByUsername(username).orElseThrow(
                 () -> new NotFoundException("Account not found."));
-        var accountDeletedBy = accountRepository.findByUsername(deletedByUsername).orElseThrow(
-                () -> new NotFoundException("Account of person that started deletion is not found."));
+        Account accountDeletedBy = account;
+        if (!account.getUsername().equals(deletedByUsername)) {
+            accountDeletedBy = accountRepository.findByUsername(deletedByUsername).orElseThrow(
+                    () -> new NotFoundException("Account of person that started deletion is not found."));
+        }
         account.setDeleted(true);
         account.setDeletedBy(accountDeletedBy.getId());
-        AccountUtils.fullyDisableAccount(account);
-        accountRepository.save(account);
-        log.info("User with 'username'='{}' deleted his account", username);
-        log.info("Delete caching for account={}", username);
-        log.info("Delete caching for accounts");
-    }
-
-    @Caching(evict = {
-            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
-            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
-    @Transactional
-    public void deleteSelfAccount(String token) throws NotFoundException {
-        var username = jwtService.getUsername(token);
-        var account = accountRepository.findByUsername(username).orElseThrow(
-                () -> new NotFoundException("Account not found."));
-        account.setDeleted(true);
         AccountUtils.fullyDisableAccount(account);
         accountRepository.save(account);
         log.info("User with 'username'='{}' deleted his account", username);

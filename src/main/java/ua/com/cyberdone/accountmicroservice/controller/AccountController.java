@@ -64,11 +64,18 @@ public class AccountController implements AccountApi {
     }
 
     @GetMapping("/{username}")
-    @PreAuthorize("hasAnyAuthority('r_all','r_account','r_self')")
+    @PreAuthorize("hasAnyAuthority('r_all','r_account')")
     public ResponseEntity<AccountDto> readAccount(@RequestHeader(AUTHORIZATION) String token,
                                                   @PathVariable(value = "username") String username)
             throws NotFoundException {
         return ResponseEntity.ok(accountService.getAccount(username));
+    }
+
+    @GetMapping("/self")
+    @PreAuthorize("hasAnyAuthority('r_all','r_self')")
+    public ResponseEntity<AccountDto> readSelfAccount(@RequestHeader(AUTHORIZATION) String token)
+            throws NotFoundException {
+        return ResponseEntity.ok(accountService.getSelfAccount(token));
     }
 
     @DeleteMapping
@@ -79,7 +86,7 @@ public class AccountController implements AccountApi {
     }
 
     @DeleteMapping("/{username}/permanent")
-    @PreAuthorize("hasAnyAuthority('d_all','d_account','d_self')")
+    @PreAuthorize("hasAnyAuthority('d_all','d_account_permanent')")
     public ResponseEntity<String> permanentDeleteAccount(@RequestHeader(AUTHORIZATION) String token,
                                                          @PathVariable String username) {
         accountService.permanentDeleteAccount(username);
@@ -95,7 +102,7 @@ public class AccountController implements AccountApi {
     }
 
     @DeleteMapping("/self")
-    @PreAuthorize("hasAnyAuthority('d_self')")
+    @PreAuthorize("hasAnyAuthority('d_all','d_self')")
     public ResponseEntity<String> deleteSelf(@RequestHeader(AUTHORIZATION) String token) throws NotFoundException {
         accountService.deleteSelfAccount(token);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
@@ -114,7 +121,8 @@ public class AccountController implements AccountApi {
         return ResponseEntity.ok(accountService.createAccountFromAnotherAccount(registrationDto, token));
     }
 
-    @PutMapping("/change/password")
+    @PutMapping("/change/password/logged")
+    @PreAuthorize("hasAnyAuthority('u_all','u_self')")
     public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto)
             throws NotFoundException {
         accountService.changeAccountPassword(changePasswordDto);
@@ -122,7 +130,7 @@ public class AccountController implements AccountApi {
     }
 
     @PutMapping("/change/fullname")
-    @PreAuthorize("hasAnyAuthority('u_all','u_accounts','u_self')")
+    @PreAuthorize("hasAnyAuthority('u_all','u_account_full_name','u_self')")
     public ResponseEntity<String> changeFullName(@RequestHeader(AUTHORIZATION) String token,
                                                  @RequestBody @Valid ChangeFullNameDto changeFullNameDto)
             throws NotFoundException {
@@ -140,11 +148,11 @@ public class AccountController implements AccountApi {
     }
 
     @PutMapping("/{username}/change/image")
-    @PreAuthorize("hasAnyAuthority('u_all','u_images','u_self')")
+    @PreAuthorize("hasAnyAuthority('u_all','u_user_account_image','u_self')")
     public ResponseEntity<String> changeImage(@RequestHeader(AUTHORIZATION) String token,
                                               @Pattern(regexp = EMAIL_RGX, message = Regex.EMAIL_FAIL_MESSAGE)
                                               @PathVariable String username, @RequestParam MultipartFile file)
-            throws NotFoundException, IOException, AlreadyExistException {
+            throws NotFoundException, IOException {
         accountService.changeAccountImage(username, file);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
