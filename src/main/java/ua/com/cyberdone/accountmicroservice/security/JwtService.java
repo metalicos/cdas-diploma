@@ -50,6 +50,7 @@ public class JwtService {
     public String generateToken(AccountDto accountDto) throws JsonProcessingException {
         Claims claims = Jwts.claims().setSubject(accountDto.getUsername()).setId(accountDto.getId() + "");
         claims.put("roles", mapper.writeValueAsString(accountDto.getRoles().toArray(new RoleDto[0])));
+        claims.put("userId", accountDto.getId());
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(generateCurrentDate())
