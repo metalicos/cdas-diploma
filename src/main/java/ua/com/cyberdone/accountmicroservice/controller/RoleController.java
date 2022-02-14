@@ -22,6 +22,8 @@ import ua.com.cyberdone.accountmicroservice.dto.role.RoleDto;
 import ua.com.cyberdone.accountmicroservice.dto.role.RolesDto;
 import ua.com.cyberdone.accountmicroservice.service.RoleService;
 
+import javax.validation.Valid;
+
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
@@ -32,7 +34,7 @@ public class RoleController implements RoleApi {
     private final RoleService roleService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('r_all','r_account_roles')")
+    @PreAuthorize("hasAnyAuthority('r_all','r_all_roles')")
     public ResponseEntity<RolesDto> readRoles(@RequestHeader(AUTHORIZATION) String token,
                                               @RequestParam(defaultValue = "0") int page,
                                               @RequestParam(defaultValue = "20") int size,
@@ -45,7 +47,7 @@ public class RoleController implements RoleApi {
     }
 
     @GetMapping("/{role-name}")
-    @PreAuthorize("hasAnyAuthority('r_all','r_account_role')")
+    @PreAuthorize("hasAnyAuthority('r_all','r_role')")
     public ResponseEntity<RoleDto> readRole(@RequestHeader(AUTHORIZATION) String token,
                                             @PathVariable(value = "role-name") String roleName)
             throws NotFoundException {
@@ -53,14 +55,14 @@ public class RoleController implements RoleApi {
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAnyAuthority('d_all','d_account_roles')")
+    @PreAuthorize("hasAnyAuthority('d_all','d_all_roles')")
     public ResponseEntity<String> deleteRoles(@RequestHeader(AUTHORIZATION) String token) {
         roleService.deleteAllRoles();
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
 
     @DeleteMapping("/{role-name}")
-    @PreAuthorize("hasAnyAuthority('d_all','d_account_role')")
+    @PreAuthorize("hasAnyAuthority('d_all','d_role')")
     public ResponseEntity<String> deleteRole(@RequestHeader(AUTHORIZATION) String token,
                                              @PathVariable(value = "role-name") String roleName) {
         roleService.deleteRole(roleName);
@@ -68,9 +70,9 @@ public class RoleController implements RoleApi {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('d_all','w_account_role')")
+    @PreAuthorize("hasAnyAuthority('w_all','w_role')")
     public ResponseEntity<RoleDto> createRole(@RequestHeader(AUTHORIZATION) String token,
-                                              @RequestBody CreateRoleDto createRoleDto)
+                                              @RequestBody @Valid CreateRoleDto createRoleDto)
             throws AlreadyExistException, NotFoundException {
         return ResponseEntity.ok(roleService.createRole(createRoleDto));
     }

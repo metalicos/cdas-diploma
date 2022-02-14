@@ -30,7 +30,7 @@ public class PermissionController implements PermissionApi {
     private final PermissionService permissionService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('r_all','r_permissions')")
+    @PreAuthorize("hasAnyAuthority('r_all','r_all_permissions')")
     public ResponseEntity<PermissionsDto> readPermissions(@RequestHeader(AUTHORIZATION) String token,
                                                           @RequestParam(defaultValue = "0") int page,
                                                           @RequestParam(defaultValue = "20") int size,
@@ -50,14 +50,14 @@ public class PermissionController implements PermissionApi {
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAnyAuthority('d_all','d_permissions')")
+    @PreAuthorize("hasAnyAuthority('d_all','d_all_permissions')")
     public ResponseEntity<String> deletePermissions(@RequestHeader(AUTHORIZATION) String token) {
         permissionService.deleteAllPermission();
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
 
     @DeleteMapping("/{name}")
-    @PreAuthorize("hasAnyAuthority('d_all','d_permissions')")
+    @PreAuthorize("hasAnyAuthority('d_all','d_permission')")
     public ResponseEntity<String> deletePermission(@RequestHeader(AUTHORIZATION) String token,
                                                    @PathVariable String name) {
         permissionService.deletePermission(name);
@@ -65,7 +65,7 @@ public class PermissionController implements PermissionApi {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('w_all','w_permissions')")
+    @PreAuthorize("hasAnyAuthority('w_all','w_permission')")
     public ResponseEntity<PermissionDto> createPermission(@RequestHeader(AUTHORIZATION) String token,
                                                           @RequestBody CreatePermissionDto dto)
             throws AlreadyExistException {

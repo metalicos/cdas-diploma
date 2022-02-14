@@ -50,7 +50,7 @@ public class AccountController implements AccountApi {
     private final AuthenticationService authenticationService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('r_all','r_accounts')")
+    @PreAuthorize("hasAnyAuthority('r_all','r_all_accounts')")
     public ResponseEntity<AccountsDto> readAccounts(@RequestHeader(AUTHORIZATION) String token,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "20") int size,
@@ -79,7 +79,7 @@ public class AccountController implements AccountApi {
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAnyAuthority('d_all','d_accounts')")
+    @PreAuthorize("hasAnyAuthority('d_all','d_all_accounts')")
     public ResponseEntity<String> deleteAccounts(@RequestHeader(AUTHORIZATION) String token) {
         accountService.deleteAllAccounts();
         return ResponseEntity.ok(ControllerConstantUtils.OK);
@@ -94,7 +94,7 @@ public class AccountController implements AccountApi {
     }
 
     @DeleteMapping("/{username}")
-    @PreAuthorize("hasAnyAuthority('d_all','d_account','d_self')")
+    @PreAuthorize("hasAnyAuthority('d_all','d_account')")
     public ResponseEntity<String> deleteAccount(@RequestHeader(AUTHORIZATION) String token,
                                                 @PathVariable String username) throws NotFoundException {
         accountService.deleteAccount(username, token);
@@ -115,6 +115,7 @@ public class AccountController implements AccountApi {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasAnyAuthority('w_all','w_account')")
     public ResponseEntity<AccountDto> createAccount(@RequestHeader(AUTHORIZATION) String token,
                                                     @RequestBody @Valid RegistrationDto registrationDto)
             throws AccessDeniedException, NotFoundException, AlreadyExistException {
@@ -139,7 +140,7 @@ public class AccountController implements AccountApi {
     }
 
     @PutMapping("/change/username")
-    @PreAuthorize("hasAnyAuthority('u_all','u_accounts','u_self')")
+    @PreAuthorize("hasAnyAuthority('u_all','u_account','u_self')")
     public ResponseEntity<String> changeUsername(@RequestHeader(AUTHORIZATION) String token,
                                                  @RequestBody @Valid ChangeEmailDto changeEmailDto)
             throws NotFoundException, AlreadyExistException {
@@ -159,14 +160,14 @@ public class AccountController implements AccountApi {
 
     @PostMapping("/authentication/login")
     public ResponseEntity<TokenDto> login(@RequestBody @Valid LoginDto loginDto) throws AuthenticationException {
-        TokenDto tokenDto = authenticationService.login(loginDto);
+        var tokenDto = authenticationService.login(loginDto);
         return ResponseEntity.ok(tokenDto);
     }
 
     @PostMapping("/authentication/logout")
     public ResponseEntity<TokenDto> logout(@RequestHeader(AUTHORIZATION) String token,
                                            @RequestBody @Valid LogoutDto logoutDto) {
-        TokenDto tokenDto = authenticationService.logout(logoutDto);
+        var tokenDto = authenticationService.logout(logoutDto);
         return ResponseEntity.ok(tokenDto);
     }
 }
