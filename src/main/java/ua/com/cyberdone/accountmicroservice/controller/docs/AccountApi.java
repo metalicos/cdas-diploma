@@ -45,6 +45,18 @@ public interface AccountApi {
                     schema = @Schema(implementation = AccountDto.class)))
     ResponseEntity<AccountDto> readAccount(String token, String username) throws NotFoundException;
 
+    @Operation(summary = "Read account profile image", description = "Return account profile image by account username")
+    @ApiResponse(responseCode = "200", description = "Return account profile image by account username",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = String.class)))
+    ResponseEntity<String> readAccountProfileImage(String token, String username) throws IOException;
+
+    @Operation(summary = "Read self account profile image", description = "Return self account profile image by token")
+    @ApiResponse(responseCode = "200", description = "Return self account profile image by token",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = String.class)))
+    ResponseEntity<String> readSelfAccountProfileImage(String token) throws IOException;
+
     @Operation(summary = "Read self account", description = "Return account by user token")
     @ApiResponse(responseCode = "200", description = "Return account by user token",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.cyberdone.accountmicroservice.common.constant.ControllerConstantUtils;
@@ -69,6 +70,21 @@ public class AccountController implements AccountApi {
                                                   @PathVariable(value = "username") String username)
             throws NotFoundException {
         return ResponseEntity.ok(accountService.getAccount(username));
+    }
+
+    @GetMapping("/{username}/profileImage")
+    @PreAuthorize("hasAnyAuthority('r_all','r_account')")
+    public ResponseEntity<String> readAccountProfileImage(@RequestHeader(AUTHORIZATION) String token,
+                                                          @PathVariable(value = "username") String username)
+            throws IOException {
+        return ResponseEntity.ok(accountService.getAccountProfileImage(username));
+    }
+
+    @GetMapping("/self/profileImage")
+    @PreAuthorize("hasAnyAuthority('r_all','r_self')")
+    public ResponseEntity<String> readSelfAccountProfileImage(@RequestHeader(AUTHORIZATION) String token)
+            throws IOException {
+        return ResponseEntity.ok(accountService.getSelfAccountProfileImage(token));
     }
 
     @GetMapping("/self")
@@ -152,7 +168,7 @@ public class AccountController implements AccountApi {
     @PreAuthorize("hasAnyAuthority('u_all','u_user_account_image','u_self')")
     public ResponseEntity<String> changeImage(@RequestHeader(AUTHORIZATION) String token,
                                               @Pattern(regexp = EMAIL_RGX, message = Regex.EMAIL_FAIL_MESSAGE)
-                                              @PathVariable String username, @RequestParam MultipartFile file)
+                                              @PathVariable String username, @RequestPart("file") MultipartFile file)
             throws NotFoundException, IOException {
         accountService.changeAccountImage(username, file);
         return ResponseEntity.ok(ControllerConstantUtils.OK);

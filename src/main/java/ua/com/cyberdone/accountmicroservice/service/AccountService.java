@@ -3,9 +3,11 @@ package ua.com.cyberdone.accountmicroservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +17,7 @@ import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedExcepti
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
 import ua.com.cyberdone.accountmicroservice.common.util.AccountUtils;
+import ua.com.cyberdone.accountmicroservice.common.util.ImageConverterUtils;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountsDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangeEmailDto;
@@ -46,6 +49,8 @@ public class AccountService {
     private final JwtService jwtService;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    @Value("classpath:static/images/profileImage.png")
+    private Resource defaultProfileImage;
 
     @Cacheable(value = ACCOUNTS_CACHE_NAME)
     public AccountsDto getAllAccounts(int page, int size) throws NotFoundException {
@@ -89,6 +94,16 @@ public class AccountService {
 
     public AccountDto getSelfAccount(String token) throws NotFoundException {
         return getAccount(jwtService.getUsername(token));
+    }
+
+    public String getAccountProfileImage(String username) throws IOException {
+        var profilePhoto = accountRepository.getPhotoByAccountUsername(username)
+                .orElse(defaultProfileImage.getInputStream().readAllBytes());
+        return ImageConverterUtils.convertBlobToBase64StringImage(profilePhoto);
+    }
+
+    public String getSelfAccountProfileImage(String token) throws IOException {
+        return getAccountProfileImage(jwtService.getUsername(token));
     }
 
     @Transactional
