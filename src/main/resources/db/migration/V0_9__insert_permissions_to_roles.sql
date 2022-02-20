@@ -141,10 +141,10 @@ VALUES
 
 -- USER
 -- general
-(5, 21), -- Read Self
-(5, 22), -- Write Self
-(5, 23), -- Update Self
-(5, 24), -- Delete Self
+(5, 26), -- Read Self
+(5, 27), -- Write Self
+(5, 28), -- Update Self
+(5, 29), -- Delete Self
 -- device metadata
 (5, 30), -- Read Device Metadata
 (5, 31), -- Read All User Device Metadata

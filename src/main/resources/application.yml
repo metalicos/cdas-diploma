@@ -10,6 +10,10 @@ spring:
   application:
     name: cyber-done-account-microservice
     version: @version@
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   profiles:
     active: prod
   datasource:
