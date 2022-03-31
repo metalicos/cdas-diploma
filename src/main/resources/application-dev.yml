@@ -1,0 +1,12 @@
+cache:
+  token:
+    time-to-live-seconds: 10
+    eviction-policy: LRU
+    max-entries-in-heap: 2
+  model:
+    time-to-live-seconds: 10
+    eviction-policy: LRU
+    max-entries-in-heap: 2
+security:
+  jwt-secret: ${JWT_SECRET}
+  jwt-expiration-time-ms: 9999999999999

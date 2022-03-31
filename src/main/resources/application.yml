@@ -14,8 +14,6 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-  profiles:
-    active: prod
   datasource:
     username: ${CDAS_DB_USERNAME}
     password: ${CDAS_DB_PASSWORD}
@@ -35,21 +33,13 @@ eureka:
     hostname: 192.168.1.100
 cache:
   token:
-    time-to-live-seconds: 600
+    time-to-live-seconds: 5
     eviction-policy: LRU
-    max-entries-in-heap: 100
+    max-entries-in-heap: 10
   model:
-    time-to-live-seconds: 600
+    time-to-live-seconds: 5
     eviction-policy: LRU
-    max-entries-in-heap: 100
+    max-entries-in-heap: 10
 security:
   jwt-secret: ${JWT_SECRET}
-  jwt-expiration-time-ms: 86400000 #24 hours 86400000
----
-spring:
-  config:
-    activate:
-      on-profile: prod
-security:
-  jwt-secret: ${JWT_SECRET}
-  jwt-expiration-time-ms: 86400000 #24 hours
+  jwt-expiration-time-ms: 86400000

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ua.com.cyberdone.accountmicroservice.common.constant.ControllerConstantUtils;
-import ua.com.cyberdone.accountmicroservice.common.constant.Regex;
 import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AuthenticationException;
@@ -35,12 +34,9 @@ import ua.com.cyberdone.accountmicroservice.dto.token.TokenDto;
 import ua.com.cyberdone.accountmicroservice.service.AccountService;
 import ua.com.cyberdone.accountmicroservice.service.AuthenticationService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.EMAIL_RGX;
 
 @Slf4j
 @RestController
@@ -67,7 +63,7 @@ public class AccountController implements AccountApi {
     @GetMapping("/{username}")
     @PreAuthorize("hasAnyAuthority('r_all','r_account')")
     public ResponseEntity<AccountDto> readAccount(@RequestHeader(AUTHORIZATION) String token,
-                                                  @PathVariable(value = "username") String username)
+                                                  @PathVariable String username)
             throws NotFoundException {
         return ResponseEntity.ok(accountService.getAccount(username));
     }
@@ -75,7 +71,7 @@ public class AccountController implements AccountApi {
     @GetMapping("/{username}/profileImage")
     @PreAuthorize("hasAnyAuthority('r_all','r_account')")
     public ResponseEntity<String> readAccountProfileImage(@RequestHeader(AUTHORIZATION) String token,
-                                                          @PathVariable(value = "username") String username)
+                                                          @PathVariable String username)
             throws IOException {
         return ResponseEntity.ok(accountService.getAccountProfileImage(username));
     }
@@ -125,7 +121,7 @@ public class AccountController implements AccountApi {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<AccountDto> createAccount(@RequestBody @Valid RegistrationDto registrationDto)
+    public ResponseEntity<AccountDto> createAccount(@RequestBody RegistrationDto registrationDto)
             throws AlreadyExistException, NotFoundException {
         return ResponseEntity.ok(accountService.createAccount(registrationDto));
     }
@@ -133,14 +129,14 @@ public class AccountController implements AccountApi {
     @PostMapping("/create")
     @PreAuthorize("hasAnyAuthority('w_all','w_account')")
     public ResponseEntity<AccountDto> createAccount(@RequestHeader(AUTHORIZATION) String token,
-                                                    @RequestBody @Valid RegistrationDto registrationDto)
+                                                    @RequestBody RegistrationDto registrationDto)
             throws AccessDeniedException, NotFoundException, AlreadyExistException {
         return ResponseEntity.ok(accountService.createAccountFromAnotherAccount(registrationDto, token));
     }
 
     @PutMapping("/change/password/logged")
     @PreAuthorize("hasAnyAuthority('u_all','u_self')")
-    public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordDto changePasswordDto)
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDto changePasswordDto)
             throws NotFoundException {
         accountService.changeAccountPassword(changePasswordDto);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
@@ -149,7 +145,7 @@ public class AccountController implements AccountApi {
     @PutMapping("/change/fullname")
     @PreAuthorize("hasAnyAuthority('u_all','u_account_full_name','u_self')")
     public ResponseEntity<String> changeFullName(@RequestHeader(AUTHORIZATION) String token,
-                                                 @RequestBody @Valid ChangeFullNameDto changeFullNameDto)
+                                                 @RequestBody ChangeFullNameDto changeFullNameDto)
             throws NotFoundException {
         accountService.changeAccountFullName(changeFullNameDto);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
@@ -158,7 +154,7 @@ public class AccountController implements AccountApi {
     @PutMapping("/change/username")
     @PreAuthorize("hasAnyAuthority('u_all','u_account','u_self')")
     public ResponseEntity<String> changeUsername(@RequestHeader(AUTHORIZATION) String token,
-                                                 @RequestBody @Valid ChangeEmailDto changeEmailDto)
+                                                 @RequestBody ChangeEmailDto changeEmailDto)
             throws NotFoundException, AlreadyExistException {
         accountService.changeAccountUsername(changeEmailDto);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
@@ -167,22 +163,22 @@ public class AccountController implements AccountApi {
     @PutMapping("/{username}/change/image")
     @PreAuthorize("hasAnyAuthority('u_all','u_user_account_image','u_self')")
     public ResponseEntity<String> changeImage(@RequestHeader(AUTHORIZATION) String token,
-                                              @Pattern(regexp = EMAIL_RGX, message = Regex.EMAIL_FAIL_MESSAGE)
-                                              @PathVariable String username, @RequestPart("file") MultipartFile file)
+                                              @PathVariable String username,
+                                              @RequestPart MultipartFile file)
             throws NotFoundException, IOException {
         accountService.changeAccountImage(username, file);
         return ResponseEntity.ok(ControllerConstantUtils.OK);
     }
 
     @PostMapping("/authentication/login")
-    public ResponseEntity<TokenDto> login(@RequestBody @Valid LoginDto loginDto) throws AuthenticationException {
+    public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) throws AuthenticationException {
         var tokenDto = authenticationService.login(loginDto);
         return ResponseEntity.ok(tokenDto);
     }
 
     @PostMapping("/authentication/logout")
     public ResponseEntity<TokenDto> logout(@RequestHeader(AUTHORIZATION) String token,
-                                           @RequestBody @Valid LogoutDto logoutDto) {
+                                           @RequestBody LogoutDto logoutDto) {
         var tokenDto = authenticationService.logout(logoutDto);
         return ResponseEntity.ok(tokenDto);
     }
