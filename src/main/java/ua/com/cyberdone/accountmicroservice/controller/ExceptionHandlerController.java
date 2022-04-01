@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -50,27 +51,20 @@ public class ExceptionHandlerController implements ExceptionHandlerApi {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<RestError> validationException(ConstraintViolationException exception) {
         return buildResponse(BAD_REQUEST, BAD_REQUEST_MSG, exception.getConstraintViolations()
-                .stream()
-                .map(violation -> new StringBuilder()
-                        .append("Value '")
-                        .append(nonNull(violation.getInvalidValue()) ? violation.getInvalidValue().toString() : StringUtils.EMPTY)
-                        .append("' is invalid.")
-                        .append(nonNull(violation.getMessage()) ? (" Reason: " + violation.getMessage()) : StringUtils.EMPTY)
-                        .toString())
+                .stream().map(v -> invalidParameter(v.getInvalidValue(), v.getMessage()))
+                .collect(Collectors.toSet()).toString());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<RestError> httpClientErrorException(MethodArgumentNotValidException exception) {
+        return buildResponse(BAD_REQUEST, BAD_REQUEST_MSG, exception.getBindingResult().getFieldErrors()
+                .stream().map(v -> invalidParameter(v.getRejectedValue(), v.getDefaultMessage()))
                 .collect(Collectors.toSet()).toString());
     }
 
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<RestError> httpClientErrorException(HttpClientErrorException exception) {
         return buildResponse(BAD_REQUEST, BAD_REQUEST_MSG, "Clients request is of the wrong format. " + exception.getMessage());
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<RestError> httpClientErrorException(MethodArgumentNotValidException exception) {
-        return buildResponse(BAD_REQUEST, BAD_REQUEST_MSG, String.format("Invalid parameters '%s'. %s",
-                exception.getBindingResult().getFieldErrors().stream()
-                        .map(e -> "'" + e.getField() + "'->'" + e.getRejectedValue() + "'")
-                        .collect(Collectors.toSet()), exception.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -137,5 +131,18 @@ public class ExceptionHandlerController implements ExceptionHandlerApi {
     @ExceptionHandler(InternalException.class)
     public ResponseEntity<RestError> httpClientErrorException(InternalException exception) {
         return buildResponse(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_MSG, exception.getMessage());
+    }
+
+    private String invalidParameter(Object invalidValue, String message) {
+        var val = nonNull(invalidValue) ? invalidValue.toString() : StringUtils.EMPTY;
+        var msg = nonNull(message) ? (" Reason: " + message) : StringUtils.EMPTY;
+        return "Value '" + val + "' is invalid." + msg;
+    }
+
+    private ResponseEntity<RestError> buildResponse(HttpStatus httpStatus, String msg, String details) {
+        return new ResponseEntity<>(
+                RestError.builder().error(httpStatus.getReasonPhrase()).title(msg).detail(details).build(),
+                httpStatus
+        );
     }
 }

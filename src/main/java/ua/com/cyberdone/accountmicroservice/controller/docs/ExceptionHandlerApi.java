@@ -224,11 +224,4 @@ public interface ExceptionHandlerApi {
                     "}")))
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     ResponseEntity<RestError> httpClientErrorException(InternalException exception);
-
-    default ResponseEntity<RestError> buildResponse(HttpStatus httpStatus, String msg, String details) {
-        return new ResponseEntity<>(
-                RestError.builder().error(httpStatus.getReasonPhrase()).title(msg).detail(details).build(),
-                httpStatus
-        );
-    }
 }
