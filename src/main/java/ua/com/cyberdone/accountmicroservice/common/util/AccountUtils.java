@@ -20,14 +20,14 @@ public final class AccountUtils {
                         .anyMatch(p -> p.equals(role.getRole())));
     }
 
-    public static void setupAccount(PasswordEncoder passwordEncoder, Account account, Set<Role> roles) {
+    public static void setupAccount(PasswordEncoder passwordEncoder, Account account, Set<Role> roles, byte[] photo) {
         account.setRoles(roles);
-        setupAccount(passwordEncoder, account);
+        setupAccount(passwordEncoder, account, photo);
     }
 
-    public static void setupAccount(PasswordEncoder passwordEncoder, Account account) {
+    public static void setupAccount(PasswordEncoder passwordEncoder, Account account, byte[] photo) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setPhoto(null);
+        account.setPhoto(photo);
         makeFullyAvailable(account);
     }
 

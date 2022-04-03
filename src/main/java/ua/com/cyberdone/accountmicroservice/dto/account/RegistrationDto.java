@@ -48,5 +48,6 @@ public class RegistrationDto {
     @Pattern(regexp = NAME_RGX,
             message = PATRONYMIC_FAIL_MESSAGE)
     private String patronymic;
+    private byte[] photo;
     private Set<String> roles;
 }

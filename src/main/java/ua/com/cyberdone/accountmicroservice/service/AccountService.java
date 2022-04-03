@@ -124,7 +124,7 @@ public class AccountService {
             var creatorsAccount = accountRepository.findByUsername(creatorsUserUsername).orElseThrow(
                     () -> new NotFoundException("Account creator is not found."));
             if (AccountUtils.permittedToCreateNewUser(creatorsAccount)) {
-                AccountUtils.setupAccount(passwordEncoder, newAccount);
+                AccountUtils.setupAccount(passwordEncoder, newAccount, null);
                 newAccount.setCreatedBy(creatorsAccount.getId());
                 return createNewUser(newAccount);
             }
@@ -140,7 +140,7 @@ public class AccountService {
             var account = new AccountMapper<RegistrationDto>(modelMapper).toEntity(registrationDto, Account.class);
             var defaultRole = Set.of(roleRepository.findByRole(AccountUtils.DEFAULT_ROLE).orElseThrow(
                     () -> new NotFoundException("Role for account is not found.")));
-            AccountUtils.setupAccount(passwordEncoder, account, defaultRole);
+            AccountUtils.setupAccount(passwordEncoder, account, defaultRole, registrationDto.getPhoto());
             return createNewUser(account);
         }
         throw new AlreadyExistException("Account with username=" + registrationDto.getUsername() + " exists.");
@@ -255,18 +255,11 @@ public class AccountService {
         log.info("Delete caching for accounts");
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = ACCOUNT_CACHE_NAME, allEntries = true),
-            @CacheEvict(value = ACCOUNTS_CACHE_NAME, allEntries = true)})
     @Transactional
     public void changeAccountImage(String username, MultipartFile file) throws NotFoundException, IOException {
         var account = accountRepository.findByUsername(username).orElseThrow(
                 () -> new NotFoundException("Account not found."));
         account.setPhoto(file.getBytes());
         accountRepository.save(account);
-        log.info("Account image successfully updated for account={}", username);
-        log.info("Account image successfully updated for account={}", username);
-        log.info("Delete caching for account={}", username);
-        log.info("Delete caching for accounts");
     }
 }

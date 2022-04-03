@@ -29,6 +29,7 @@ import ua.com.cyberdone.accountmicroservice.dto.account.ChangeFullNameDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangePasswordDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.LoginDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.LogoutDto;
+import ua.com.cyberdone.accountmicroservice.dto.account.OauthLoginDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.RegistrationDto;
 import ua.com.cyberdone.accountmicroservice.dto.token.TokenDto;
 import ua.com.cyberdone.accountmicroservice.service.AccountService;
@@ -173,6 +174,12 @@ public class AccountController implements AccountApi {
     @PostMapping("/authentication/login")
     public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) throws AuthenticationException {
         var tokenDto = authenticationService.login(loginDto);
+        return ResponseEntity.ok(tokenDto);
+    }
+
+    @PostMapping("/authentication/oauth")
+    public ResponseEntity<TokenDto> loginOauth(@RequestBody OauthLoginDto oauthLoginDto) throws AuthenticationException {
+        var tokenDto = authenticationService.oauthLogin(oauthLoginDto);
         return ResponseEntity.ok(tokenDto);
     }
 
