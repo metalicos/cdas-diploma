@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ua.com.cyberdone.accountmicroservice.common.constant.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
+import ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.controller.docs.PermissionApi;
 import ua.com.cyberdone.accountmicroservice.dto.permission.CreatePermissionDto;
 import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionDto;
@@ -22,6 +22,10 @@ import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionsDto;
 import ua.com.cyberdone.accountmicroservice.service.PermissionService;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils.DEFAULT_DIRECTION;
+import static ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils.DEFAULT_ELEMENTS_AMOUNT;
+import static ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils.DEFAULT_PAGE;
+import static ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils.DEFAULT_SEARCH;
 
 @RestController
 @AllArgsConstructor
@@ -32,10 +36,10 @@ public class PermissionController implements PermissionApi {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('r_all','r_all_permissions')")
     public ResponseEntity<PermissionsDto> readPermissions(@RequestHeader(AUTHORIZATION) String token,
-                                                          @RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "20") int size,
-                                                          @RequestParam(defaultValue = "NONE") String direction,
-                                                          @RequestParam(defaultValue = "NONE") String sortBy) {
+                                                          @RequestParam(defaultValue = DEFAULT_PAGE, required = false) Integer page,
+                                                          @RequestParam(defaultValue = DEFAULT_ELEMENTS_AMOUNT, required = false) Integer size,
+                                                          @RequestParam(defaultValue = DEFAULT_DIRECTION, required = false) String direction,
+                                                          @RequestParam(defaultValue = DEFAULT_SEARCH, required = false) String sortBy) {
         if ("NONE".equals(sortBy) && sortBy.equals(direction)) {
             return ResponseEntity.ok(permissionService.getAllPermissions(page, size));
         }

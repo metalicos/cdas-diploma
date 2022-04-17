@@ -7,10 +7,10 @@ import lombok.Data;
 import javax.validation.constraints.Pattern;
 import java.util.Set;
 
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.PERMISSION_NAME_FAIL_MESSAGE;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.PERMISSION_NAME_RGX;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.ROLE_NAME_FAIL_MESSAGE;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.ROLE_NAME_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.PERMISSION_NAME_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.PERMISSION_NAME_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.ROLE_NAME_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.ROLE_NAME_RGX;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)

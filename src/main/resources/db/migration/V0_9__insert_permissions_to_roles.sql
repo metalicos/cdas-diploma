@@ -79,7 +79,13 @@ VALUES
 -- hydroponic calibration data
 (2, 78), -- Read All Hydroponic Calibration Data
 (2, 79), -- Delete Hydroponic Calibration Data
-
+(2, 80), -- Update Hydroponic PH Sensor Calibration From Database Data
+(2, 81), -- Update Hydroponic TDS Sensor Calibration From Database Data
+-- device delegation control
+(2, 82), -- Read Delegated Device Control Using Self Token
+(2, 83), -- Read Delegated Device Control
+(2, 84), -- Update Delegated Device Control
+(2, 85), -- Create Delegated Device Control
 
 -- ADMIN
 -- permissions
@@ -113,6 +119,10 @@ VALUES
 (3, 45), -- Write Hydroponic Setting Template
 (3, 46), -- Update Hydroponic Setting Template
 (3, 47), -- Delete Hydroponic Setting Template
+-- device delegation control
+(3, 82), -- Read Delegated Device Control Using Self Token
+(3, 83), -- Read Delegated Device Control
+(3, 84), -- Update Delegated Device Control
 
 
 -- MANAGER
@@ -137,6 +147,10 @@ VALUES
 (4, 45), -- Write Hydroponic Setting Template
 (4, 46), -- Update Hydroponic Setting Template
 (4, 47), -- Delete Hydroponic Setting Template
+-- device delegation control
+(4, 82), -- Read Delegated Device Control Using Self Token
+(4, 83), -- Read Delegated Device Control
+(4, 84), -- Update Delegated Device Control
 
 
 -- USER
@@ -199,6 +213,13 @@ VALUES
 -- hydroponic calibration data
 (5, 78), -- Read All Hydroponic Calibration Data
 (5, 79), -- Delete Hydroponic Calibration Data
+(5, 80), -- Update Hydroponic PH Sensor Calibration From Database Data
+(5, 81), -- Update Hydroponic TDS Sensor Calibration From Database Data
+-- device delegation control
+(5, 82), -- Read Delegated Device Control Using Self Token
+(5, 83), -- Read Delegated Device Control
+(5, 84), -- Update Delegated Device Control
+(5, 85), -- Create Delegated Device Control
 
 -- SECURITY_DIRECTOR
 -- permissions
@@ -223,6 +244,11 @@ VALUES
 (6, 22), -- Update Account
 (6, 24), -- Delete Account
 (6, 23), -- Delete All Accounts
-(6, 25); -- Delete Account Permanent
+(6, 25), -- Delete Account Permanent
+-- device delegation control
+(6, 82), -- Read Delegated Device Control Using Self Token
+(6, 83), -- Read Delegated Device Control
+(6, 84), -- Update Delegated Device Control
+(6, 85); -- Create Delegated Device Control
 
 COMMIT;

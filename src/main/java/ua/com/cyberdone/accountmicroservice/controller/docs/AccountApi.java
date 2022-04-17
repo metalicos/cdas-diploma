@@ -10,12 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.multipart.MultipartFile;
-import ua.com.cyberdone.accountmicroservice.common.constant.ControllerConstantUtils;
-import ua.com.cyberdone.accountmicroservice.common.constant.Regex;
 import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AuthenticationException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
+import ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils;
+import ua.com.cyberdone.accountmicroservice.common.util.Regex;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountsDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangeEmailDto;
@@ -27,10 +27,16 @@ import ua.com.cyberdone.accountmicroservice.dto.account.RegistrationDto;
 import ua.com.cyberdone.accountmicroservice.dto.token.TokenDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.NOT_POSITIVE_OR_ZERO_MSG;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.SORT_DIRECTION_FAILED_MSG;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.SORT_DIRECTION_PATTERN;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.VALUE_IS_NULL_MSG;
 
 @Validated
 @Tag(name = "Accounts", description = "Endpoints for managing accounts")
@@ -41,7 +47,21 @@ public interface AccountApi {
             "'direction' (ASC / DESC) / filter by word 'sortBy'",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = AccountsDto.class)))
-    ResponseEntity<AccountsDto> readAccounts(String token, int page, int size, String direction, String sortBy)
+    ResponseEntity<AccountsDto> readAccounts(
+            String token,
+            @Valid
+            @NotNull(message = VALUE_IS_NULL_MSG)
+            @PositiveOrZero(message = NOT_POSITIVE_OR_ZERO_MSG)
+                    Integer page,
+            @Valid
+            @NotNull(message = VALUE_IS_NULL_MSG)
+            @PositiveOrZero(message = NOT_POSITIVE_OR_ZERO_MSG)
+                    Integer size,
+            @Valid
+            @NotNull(message = VALUE_IS_NULL_MSG)
+            @Pattern(regexp = SORT_DIRECTION_PATTERN, message = SORT_DIRECTION_FAILED_MSG)
+                    String direction,
+            String sortBy)
             throws NotFoundException;
 
     @Operation(summary = "Read account", description = "Return account by username")

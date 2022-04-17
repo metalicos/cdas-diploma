@@ -6,12 +6,12 @@ import lombok.Data;
 
 import javax.validation.constraints.Pattern;
 
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.EMAIL_FAIL_MESSAGE;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.EMAIL_RGX;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.FIRST_NAME_FAIL_MESSAGE;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.LAST_NAME_FAIL_MESSAGE;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.NAME_RGX;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.PATRONYMIC_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.EMAIL_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.EMAIL_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.FIRST_NAME_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.LAST_NAME_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.NAME_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.PATRONYMIC_FAIL_MESSAGE;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)

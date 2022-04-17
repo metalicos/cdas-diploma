@@ -6,8 +6,8 @@ import lombok.Data;
 
 import javax.validation.constraints.Pattern;
 
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.TOKEN_FAIL_MESSAGE;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.TOKEN_WITH_TYPE_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.TOKEN_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.TOKEN_WITH_TYPE_RGX;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)

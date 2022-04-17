@@ -90,6 +90,13 @@ VALUES (1, 'Read All', 'r_all'),
        (77, 'Update Hydroponic Enable Dispensers', 'u_hydroponic_enable_dispensers'),
 
        (78, 'Read All Hydroponic Calibration Data', 'r_all_hydroponic_calibration_data'),
-       (79, 'Delete Hydroponic Calibration Data', 'd_hydroponic_calibration_data');
+       (79, 'Delete Hydroponic Calibration Data', 'd_hydroponic_calibration_data'),
+       (80, 'Update Hydroponic PH Sensor Calibration From Database Data', 'u_hydroponic_ph_calibration_from_database'),
+       (81, 'Update Hydroponic TDS Sensor Calibration From Database Data', 'u_hydroponic_tds_calibration_from_database'),
+
+       (82, 'Read Delegated Device Control Using Self Token', 'r_self_delegated_device_control'),
+       (83, 'Read Delegated Device Control', 'r_delegated_device_control'),
+       (84, 'Update Delegated Device Control', 'u_delegated_device_control'),
+       (85, 'Create Delegated Device Control', 'w_delegated_device_control_request');
 
 COMMIT;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import ua.com.cyberdone.accountmicroservice.common.constant.ControllerConstantUtils;
+import ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AuthenticationException;
@@ -38,6 +38,10 @@ import ua.com.cyberdone.accountmicroservice.service.AuthenticationService;
 import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils.DEFAULT_DIRECTION;
+import static ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils.DEFAULT_ELEMENTS_AMOUNT;
+import static ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils.DEFAULT_PAGE;
+import static ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils.DEFAULT_SEARCH;
 
 @Slf4j
 @RestController
@@ -50,12 +54,12 @@ public class AccountController implements AccountApi {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('r_all','r_all_accounts')")
     public ResponseEntity<AccountsDto> readAccounts(@RequestHeader(AUTHORIZATION) String token,
-                                                    @RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "20") int size,
-                                                    @RequestParam(defaultValue = "NONE") String direction,
-                                                    @RequestParam(defaultValue = "NONE") String sortBy)
+                                                    @RequestParam(defaultValue = DEFAULT_PAGE, required = false) Integer page,
+                                                    @RequestParam(defaultValue = DEFAULT_ELEMENTS_AMOUNT, required = false) Integer size,
+                                                    @RequestParam(defaultValue = DEFAULT_DIRECTION, required = false) String direction,
+                                                    @RequestParam(defaultValue = DEFAULT_SEARCH, required = false) String sortBy)
             throws NotFoundException {
-        if ("NONE".equals(sortBy) && sortBy.equals(direction)) {
+        if (DEFAULT_SEARCH.equals(sortBy) && sortBy.equals(direction)) {
             return ResponseEntity.ok(accountService.getAllAccounts(page, size));
         }
         return ResponseEntity.ok(accountService.getAllAccounts(page, size, direction, sortBy));

@@ -9,10 +9,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.util.Set;
 
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.SORTING_DIRECTION_FAIL_MESSAGE;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.SORTING_DIRECTION_RGX;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.SORT_BY_FAIL_MESSAGE;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.SORT_BY_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.SORT_BY_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.SORT_DIRECTION_FAILED_MSG;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.SORT_DIRECTION_PATTERN;
 
 @Data
 @Builder
@@ -49,9 +48,8 @@ public class PermissionsDto {
     private Integer totallyPages;
     private Integer foundElements;
     private Long totallyElements;
-    @Pattern(regexp = SORT_BY_RGX, message = SORT_BY_FAIL_MESSAGE)
     private String sortedBy;
-    @Pattern(regexp = SORTING_DIRECTION_RGX, message = SORTING_DIRECTION_FAIL_MESSAGE)
+    @Pattern(regexp = SORT_DIRECTION_PATTERN, message = SORT_DIRECTION_FAILED_MSG)
     private String sortDirection;
     private Set<@Valid PermissionDto> permissions;
 }

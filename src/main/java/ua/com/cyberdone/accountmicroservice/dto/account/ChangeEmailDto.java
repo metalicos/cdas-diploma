@@ -6,8 +6,8 @@ import lombok.Data;
 
 import javax.validation.constraints.Pattern;
 
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.EMAIL_FAIL_MESSAGE;
-import static ua.com.cyberdone.accountmicroservice.common.constant.Regex.EMAIL_RGX;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.EMAIL_FAIL_MESSAGE;
+import static ua.com.cyberdone.accountmicroservice.common.util.Regex.EMAIL_RGX;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
