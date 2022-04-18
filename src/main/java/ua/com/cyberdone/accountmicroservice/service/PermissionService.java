@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
+import ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionDto;
 import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionsDto;
 import ua.com.cyberdone.accountmicroservice.entity.Permission;
@@ -37,8 +38,8 @@ public class PermissionService {
                 .totallyPages(permissionPage.getTotalPages())
                 .foundElements(permissionPage.getNumberOfElements())
                 .totallyElements(permissionPage.getTotalElements())
-                .sortedBy("NONE")
-                .sortDirection("NONE")
+                .sortedBy(ControllerConstantUtils.DEFAULT_SEARCH)
+                .sortDirection(ControllerConstantUtils.DEFAULT_DIRECTION)
                 .permissions(new PermissionMapper<PermissionDto>(modelMapper)
                         .toDtoSet(permissionPage.toSet(), PermissionDto.class))
                 .build();

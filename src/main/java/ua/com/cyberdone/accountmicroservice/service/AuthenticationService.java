@@ -30,7 +30,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 @RequiredArgsConstructor
 public class AuthenticationService {
     public static final String BEARER = "Bearer ";
-    private static final String BASE_PATH = "http://cyberdone.store";
     private final AccountService accountService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -53,7 +52,7 @@ public class AuthenticationService {
     }
 
     public TokenDto oauthLogin(OauthLoginDto oauthLoginDto) throws AuthenticationException {
-        AccountDto accountDto = null;
+        AccountDto accountDto;
         try {
             try {
                 accountDto = accountService.getAccount(oauthLoginDto.getEmail());

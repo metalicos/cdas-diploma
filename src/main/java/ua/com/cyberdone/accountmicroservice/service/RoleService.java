@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
+import ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.dto.role.CreateRoleDto;
 import ua.com.cyberdone.accountmicroservice.dto.role.RoleDto;
 import ua.com.cyberdone.accountmicroservice.dto.role.RolesDto;
@@ -43,8 +44,8 @@ public class RoleService {
                 .totallyPages(rolePage.getTotalPages())
                 .foundElements(rolePage.getNumberOfElements())
                 .totallyElements(rolePage.getTotalElements())
-                .sortedBy("NONE")
-                .sortDirection("NONE")
+                .sortedBy(ControllerConstantUtils.DEFAULT_SEARCH)
+                .sortDirection(ControllerConstantUtils.DEFAULT_DIRECTION)
                 .roles(new RoleMapper<RoleDto>(modelMapper).toDtoSet(rolePage.toSet(), RoleDto.class))
                 .build();
     }

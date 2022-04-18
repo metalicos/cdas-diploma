@@ -17,6 +17,7 @@ import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedExcepti
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
 import ua.com.cyberdone.accountmicroservice.common.util.AccountUtils;
+import ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.common.util.ImageConverterUtils;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountsDto;
@@ -62,8 +63,8 @@ public class AccountService {
                 .foundElements(accounts.getNumberOfElements())
                 .totallyElements(accounts.getTotalElements())
                 .totallyPages(accounts.getTotalPages())
-                .sortedBy("NONE")
-                .sortDirection("NONE")
+                .sortedBy(ControllerConstantUtils.DEFAULT_SEARCH)
+                .sortDirection(ControllerConstantUtils.DEFAULT_DIRECTION)
                 .accounts(new AccountMapper<AccountDto>(modelMapper).toDtoList(accounts.getContent(), AccountDto.class))
                 .build();
     }

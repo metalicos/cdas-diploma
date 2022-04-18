@@ -59,7 +59,7 @@ public class AccountController implements AccountApi {
                                                     @RequestParam(defaultValue = DEFAULT_DIRECTION, required = false) String direction,
                                                     @RequestParam(defaultValue = DEFAULT_SEARCH, required = false) String sortBy)
             throws NotFoundException {
-        if (DEFAULT_SEARCH.equals(sortBy) && sortBy.equals(direction)) {
+        if (DEFAULT_SEARCH.equals(sortBy)) {
             return ResponseEntity.ok(accountService.getAllAccounts(page, size));
         }
         return ResponseEntity.ok(accountService.getAllAccounts(page, size, direction, sortBy));

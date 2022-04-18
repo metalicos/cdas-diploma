@@ -40,7 +40,7 @@ public class PermissionController implements PermissionApi {
                                                           @RequestParam(defaultValue = DEFAULT_ELEMENTS_AMOUNT, required = false) Integer size,
                                                           @RequestParam(defaultValue = DEFAULT_DIRECTION, required = false) String direction,
                                                           @RequestParam(defaultValue = DEFAULT_SEARCH, required = false) String sortBy) {
-        if ("NONE".equals(sortBy) && sortBy.equals(direction)) {
+        if (DEFAULT_SEARCH.equals(sortBy)) {
             return ResponseEntity.ok(permissionService.getAllPermissions(page, size));
         }
         return ResponseEntity.ok(permissionService.getAllPermissions(page, size, direction, sortBy));
