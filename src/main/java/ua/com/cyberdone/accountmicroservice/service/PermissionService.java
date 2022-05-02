@@ -6,12 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
-import ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionDto;
 import ua.com.cyberdone.accountmicroservice.dto.permission.PermissionsDto;
 import ua.com.cyberdone.accountmicroservice.entity.Permission;
@@ -32,34 +32,14 @@ public class PermissionService {
     public PermissionsDto getAllPermissions(int page, int size) {
         var permissionPage = permissionRepository.findAll(PageRequest.of(page, size));
         log.info("Permissions {} are successfully read", permissionPage.getContent());
-        return PermissionsDto.builder()
-                .page(page)
-                .elementsOnThePage(size)
-                .totallyPages(permissionPage.getTotalPages())
-                .foundElements(permissionPage.getNumberOfElements())
-                .totallyElements(permissionPage.getTotalElements())
-                .sortedBy(ControllerConstantUtils.DEFAULT_SEARCH)
-                .sortDirection(ControllerConstantUtils.DEFAULT_DIRECTION)
-                .permissions(new PermissionMapper<PermissionDto>(modelMapper)
-                        .toDtoSet(permissionPage.toSet(), PermissionDto.class))
-                .build();
+        return getPageableDto(permissionPage);
     }
 
     public PermissionsDto getAllPermissions(int page, int size, String direction, String sortBy) {
         var sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         var permissionPage = permissionRepository.findAll(PageRequest.of(page, size, sort));
         log.info("Permissions {} are successfully read", permissionPage.getContent());
-        return PermissionsDto.builder()
-                .page(page)
-                .elementsOnThePage(size)
-                .totallyPages(permissionPage.getTotalPages())
-                .foundElements(permissionPage.getNumberOfElements())
-                .totallyElements(permissionPage.getTotalElements())
-                .sortedBy(sortBy)
-                .sortDirection(direction)
-                .permissions(new PermissionMapper<PermissionDto>(modelMapper)
-                        .toDtoSet(permissionPage.toSet(), PermissionDto.class))
-                .build();
+        return getPageableDto(permissionPage);
     }
 
     @Cacheable(value = PERMISSION_CACHE_NAME, key = "#name")
@@ -97,5 +77,15 @@ public class PermissionService {
     public void deleteAllPermission() {
         permissionRepository.deleteAll();
         log.info("All Permissions are deleted");
+    }
+
+    private PermissionsDto getPageableDto(Page<Permission> pageable) {
+        return PermissionsDto.builder()
+                .page(pageable.getNumber())
+                .elementsOnThePage(pageable.getNumberOfElements())
+                .totallyElements(pageable.getTotalElements())
+                .totallyPages(pageable.getTotalPages())
+                .content(new PermissionMapper<PermissionDto>(modelMapper).toDtoList(pageable.getContent(), PermissionDto.class))
+                .build();
     }
 }

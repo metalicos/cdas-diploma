@@ -86,4 +86,5 @@ public class AccountDto implements Serializable {
     @JsonIgnore
     private Byte[] photo;
     private Set<@Valid RoleDto> roles;
+    private Set<String> permissions;
 }

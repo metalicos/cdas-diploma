@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.AuthenticationException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
-import ua.com.cyberdone.accountmicroservice.common.util.ImageConverterUtils;
+import ua.com.cyberdone.accountmicroservice.common.util.ImageUtils;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.LoginDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.LogoutDto;
@@ -65,7 +65,7 @@ public class AuthenticationService {
                 registration.setPassword(tempPassword);
                 registration.setPasswordCheck(tempPassword);
                 registration.setUsername(oauthLoginDto.getEmail());
-                registration.setPhoto(ImageConverterUtils.getImageBytes(oauthLoginDto.getPhotoUrl()));
+                registration.setPhoto(ImageUtils.getImageBytes(oauthLoginDto.getPhotoUrl()));
 
                 accountDto = accountService.createAccount(registration);
             }

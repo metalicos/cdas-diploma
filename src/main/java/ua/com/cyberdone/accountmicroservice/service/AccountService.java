@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,8 +18,8 @@ import ua.com.cyberdone.accountmicroservice.common.exception.AccessDeniedExcepti
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
 import ua.com.cyberdone.accountmicroservice.common.util.AccountUtils;
-import ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils;
-import ua.com.cyberdone.accountmicroservice.common.util.ImageConverterUtils;
+import ua.com.cyberdone.accountmicroservice.common.util.ImageStandards;
+import ua.com.cyberdone.accountmicroservice.common.util.ImageUtils;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.AccountsDto;
 import ua.com.cyberdone.accountmicroservice.dto.account.ChangeEmailDto;
@@ -34,9 +35,13 @@ import ua.com.cyberdone.accountmicroservice.security.JwtService;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static ua.com.cyberdone.accountmicroservice.config.CyberdoneCachingConfig.ACCOUNTS_CACHE_NAME;
 import static ua.com.cyberdone.accountmicroservice.config.CyberdoneCachingConfig.ACCOUNT_CACHE_NAME;
@@ -57,32 +62,14 @@ public class AccountService {
     public AccountsDto getAllAccounts(int page, int size) throws NotFoundException {
         var accounts = Optional.of(accountRepository.findAll(PageRequest.of(page, size)))
                 .orElseThrow(() -> new NotFoundException("None accounts was found."));
-        return AccountsDto.builder()
-                .page(page)
-                .elementsOnThePage(size)
-                .foundElements(accounts.getNumberOfElements())
-                .totallyElements(accounts.getTotalElements())
-                .totallyPages(accounts.getTotalPages())
-                .sortedBy(ControllerConstantUtils.DEFAULT_SEARCH)
-                .sortDirection(ControllerConstantUtils.DEFAULT_DIRECTION)
-                .accounts(new AccountMapper<AccountDto>(modelMapper).toDtoList(accounts.getContent(), AccountDto.class))
-                .build();
+        return getPageableDto(accounts);
     }
 
     public AccountsDto getAllAccounts(int page, int size, String direction, String sortBy) throws NotFoundException {
         var sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         var accounts = Optional.of(accountRepository.findAll(PageRequest.of(page, size, sort)))
                 .orElseThrow(() -> new NotFoundException("None accounts was found."));
-        return AccountsDto.builder()
-                .page(page)
-                .elementsOnThePage(size)
-                .foundElements(accounts.getNumberOfElements())
-                .totallyElements(accounts.getTotalElements())
-                .totallyPages(accounts.getTotalPages())
-                .sortedBy(sortBy)
-                .sortDirection(direction)
-                .accounts(new AccountMapper<AccountDto>(modelMapper).toDtoList(accounts.getContent(), AccountDto.class))
-                .build();
+        return getPageableDto(accounts);
     }
 
     @Cacheable(value = ACCOUNT_CACHE_NAME, key = "#username")
@@ -100,7 +87,8 @@ public class AccountService {
     public String getAccountProfileImage(String username) throws IOException {
         var profilePhoto = accountRepository.getPhotoByAccountUsername(username)
                 .orElse(defaultProfileImage.getInputStream().readAllBytes());
-        return ImageConverterUtils.convertBlobToBase64StringImage(profilePhoto);
+
+        return ImageUtils.getScaledBase64OrElseOriginal(profilePhoto, ImageStandards.PROFILE_IMAGE);
     }
 
     public String getSelfAccountProfileImage(String token) throws IOException {
@@ -262,5 +250,15 @@ public class AccountService {
                 () -> new NotFoundException("Account not found."));
         account.setPhoto(file.getBytes());
         accountRepository.save(account);
+    }
+
+    private AccountsDto getPageableDto(Page<Account> pageable) {
+        return AccountsDto.builder()
+                .page(pageable.getNumber())
+                .elementsOnThePage(pageable.getNumberOfElements())
+                .totallyElements(pageable.getTotalElements())
+                .totallyPages(pageable.getTotalPages())
+                .content(new AccountMapper<AccountDto>(modelMapper).toDtoList(pageable.getContent(), AccountDto.class))
+                .build();
     }
 }

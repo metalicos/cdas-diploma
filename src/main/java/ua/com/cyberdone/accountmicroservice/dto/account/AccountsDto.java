@@ -2,20 +2,14 @@ package ua.com.cyberdone.accountmicroservice.dto.account;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import ua.com.cyberdone.accountmicroservice.dto.PageableDto;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-import java.util.List;
+import java.io.Serial;
+import java.io.Serializable;
 
-import static ua.com.cyberdone.accountmicroservice.common.util.Regex.SORT_BY_RGX;
-import static ua.com.cyberdone.accountmicroservice.common.util.Regex.SORT_DIRECTION_FAILED_MSG;
-import static ua.com.cyberdone.accountmicroservice.common.util.Regex.SORT_DIRECTION_PATTERN;
-
-@Data
-@Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(example = "{\n" +
         "    \"page\": 0,\n" +
         "    \"elementsOnThePage\": 1,\n" +
@@ -63,14 +57,11 @@ import static ua.com.cyberdone.accountmicroservice.common.util.Regex.SORT_DIRECT
         "        }\n" +
         "    ]\n" +
         "}")
-public class AccountsDto {
-    private Integer page;
-    private Integer elementsOnThePage;
-    private Integer totallyPages;
-    private Integer foundElements;
-    private Long totallyElements;
-    private String sortedBy;
-    @Pattern(regexp = SORT_DIRECTION_PATTERN, message = SORT_DIRECTION_FAILED_MSG)
-    private String sortDirection;
-    private List<@Valid AccountDto> accounts;
+@Getter
+@SuperBuilder
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AccountsDto extends PageableDto<AccountDto> implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 88454333L;
 }

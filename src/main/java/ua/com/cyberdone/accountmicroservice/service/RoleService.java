@@ -6,12 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.com.cyberdone.accountmicroservice.common.exception.AlreadyExistException;
 import ua.com.cyberdone.accountmicroservice.common.exception.NotFoundException;
-import ua.com.cyberdone.accountmicroservice.common.util.ControllerConstantUtils;
 import ua.com.cyberdone.accountmicroservice.dto.role.CreateRoleDto;
 import ua.com.cyberdone.accountmicroservice.dto.role.RoleDto;
 import ua.com.cyberdone.accountmicroservice.dto.role.RolesDto;
@@ -38,32 +38,14 @@ public class RoleService {
     public RolesDto getAllRoles(int page, int size) {
         var rolePage = roleRepository.findAll(PageRequest.of(page, size));
         log.info("Roles {} are successfully read", rolePage.getContent());
-        return RolesDto.builder()
-                .page(page)
-                .elementsOnThePage(size)
-                .totallyPages(rolePage.getTotalPages())
-                .foundElements(rolePage.getNumberOfElements())
-                .totallyElements(rolePage.getTotalElements())
-                .sortedBy(ControllerConstantUtils.DEFAULT_SEARCH)
-                .sortDirection(ControllerConstantUtils.DEFAULT_DIRECTION)
-                .roles(new RoleMapper<RoleDto>(modelMapper).toDtoSet(rolePage.toSet(), RoleDto.class))
-                .build();
+        return getPageableDto(rolePage);
     }
 
     public RolesDto getAllRoles(int page, int size, String direction, String sortBy) {
         var sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         var rolePage = roleRepository.findAll(PageRequest.of(page, size, sort));
         log.info("Roles {} are successfully read", rolePage.getContent());
-        return RolesDto.builder()
-                .page(page)
-                .elementsOnThePage(size)
-                .totallyPages(rolePage.getTotalPages())
-                .foundElements(rolePage.getNumberOfElements())
-                .totallyElements(rolePage.getTotalElements())
-                .sortedBy(sortBy)
-                .sortDirection(direction)
-                .roles(new RoleMapper<RoleDto>(modelMapper).toDtoSet(rolePage.toSet(), RoleDto.class))
-                .build();
+        return getPageableDto(rolePage);
     }
 
     @Cacheable(value = ROLE_CACHE_NAME, key = "#name")
@@ -107,5 +89,15 @@ public class RoleService {
     public void deleteAllRoles() {
         roleRepository.deleteAll();
         log.info("All roles are deleted");
+    }
+
+    private RolesDto getPageableDto(Page<Role> pageable) {
+        return RolesDto.builder()
+                .page(pageable.getNumber())
+                .elementsOnThePage(pageable.getNumberOfElements())
+                .totallyElements(pageable.getTotalElements())
+                .totallyPages(pageable.getTotalPages())
+                .content(new RoleMapper<RoleDto>(modelMapper).toDtoList(pageable.getContent(), RoleDto.class))
+                .build();
     }
 }

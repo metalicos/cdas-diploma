@@ -24,6 +24,7 @@
         <spring.doc.version>1.6.6</spring.doc.version>
         <spring.doc.plugin.version>0.2</spring.doc.plugin.version>
         <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
+        <thumbnailator.version>0.4.17</thumbnailator.version>
     </properties>
 
     <dependencyManagement>
@@ -115,6 +116,11 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-security</artifactId>
             <version>${spring.doc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>${thumbnailator.version}</version>
         </dependency>
     </dependencies>
 

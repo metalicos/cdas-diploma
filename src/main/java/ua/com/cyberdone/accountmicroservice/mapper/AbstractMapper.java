@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toList;
 @AllArgsConstructor
 public abstract class AbstractMapper<Entity, Dto> {
 
-    private final ModelMapper modelMapper;
+    protected final ModelMapper modelMapper;
 
     public Entity toEntity(Dto dto, Class<Entity> clazz) {
         return modelMapper.map(dto, clazz);
