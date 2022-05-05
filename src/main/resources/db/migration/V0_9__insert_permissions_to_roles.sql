@@ -65,7 +65,6 @@ VALUES
 (2, 64), -- Update Hydroponic Clear Ph Calibration
 (2, 65), -- Update Hydroponic Setup Ph
 (2, 66), -- Update Hydroponic Setup Tds
-(2, 67), -- Update Hydroponic Dispensers Recheck Time
 (2, 68), -- Update Hydroponic Ph Up Dose
 (2, 69), -- Update Hydroponic Ph Down Dose
 (2, 70), -- Update Hydroponic Tds Dose
@@ -76,6 +75,11 @@ VALUES
 (2, 75), -- Update Hydroponic Wifi Password
 (2, 76), -- Update Hydroponic Enable Sensors
 (2, 77), -- Update Hydroponic Enable Dispensers
+(2, 86), -- Update Hydroponic Dispensers Tds Recheck Time
+(2, 87), -- Update Hydroponic Dispensers Ph Recheck Time
+(2, 88), -- Update Hydroponic Clear Impurity Calculation
+(2, 89), -- Update Hydroponic Calculate Start Solution As Fertiliser
+(2, 90), -- Update Hydroponic Calculate Ph Regulation As Fertiliser
 -- hydroponic calibration data
 (2, 78), -- Read All Hydroponic Calibration Data
 (2, 79), -- Delete Hydroponic Calibration Data
@@ -199,7 +203,6 @@ VALUES
 (5, 64), -- Update Hydroponic Clear Ph Calibration
 (5, 65), -- Update Hydroponic Setup Ph
 (5, 66), -- Update Hydroponic Setup Tds
-(5, 67), -- Update Hydroponic Dispensers Recheck Time
 (5, 68), -- Update Hydroponic Ph Up Dose
 (5, 69), -- Update Hydroponic Ph Down Dose
 (5, 70), -- Update Hydroponic Tds Dose
@@ -210,6 +213,11 @@ VALUES
 (5, 75), -- Update Hydroponic Wifi Password
 (5, 76), -- Update Hydroponic Enable Sensors
 (5, 77), -- Update Hydroponic Enable Dispensers
+(5, 86), -- Update Hydroponic Dispensers Tds Recheck Time
+(5, 87), -- Update Hydroponic Dispensers Ph Recheck Time
+(5, 88), -- Update Hydroponic Clear Impurity Calculation
+(5, 89), -- Update Hydroponic Calculate Start Solution As Fertiliser
+(5, 90), -- Update Hydroponic Calculate Ph Regulation As Fertiliser
 -- hydroponic calibration data
 (5, 78), -- Read All Hydroponic Calibration Data
 (5, 79), -- Delete Hydroponic Calibration Data
