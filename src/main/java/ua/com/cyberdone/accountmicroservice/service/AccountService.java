@@ -2,6 +2,7 @@ package ua.com.cyberdone.accountmicroservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
@@ -248,7 +249,7 @@ public class AccountService {
     public void changeAccountImage(String username, MultipartFile file) throws NotFoundException, IOException {
         var account = accountRepository.findByUsername(username).orElseThrow(
                 () -> new NotFoundException("Account not found."));
-        account.setPhoto(file.getBytes());
+        account.setPhoto(BlobProxy.generateProxy(file.getBytes()));
         accountRepository.save(account);
     }
 

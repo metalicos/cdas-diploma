@@ -1,6 +1,7 @@
 package ua.com.cyberdone.accountmicroservice.common.util;
 
 import lombok.experimental.UtilityClass;
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ua.com.cyberdone.accountmicroservice.entity.Account;
 import ua.com.cyberdone.accountmicroservice.entity.Role;
@@ -27,7 +28,7 @@ public final class AccountUtils {
 
     public static void setupAccount(PasswordEncoder passwordEncoder, Account account, byte[] photo) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setPhoto(photo);
+        account.setPhoto(BlobProxy.generateProxy(photo));
         makeFullyAvailable(account);
     }
 

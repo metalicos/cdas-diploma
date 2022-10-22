@@ -1,14 +1,17 @@
-USE `cdas`;
-CREATE TABLE `cdas`.`account_detail`
+SET SCHEMA 'public';
+
+CREATE TABLE "account_detail"
 (
-    `id`                BIGINT       NOT NULL AUTO_INCREMENT,
-    `account_id`        BIGINT       NOT NULL,
-    `gender`            VARCHAR(255) NULL DEFAULT NULL,
-    `birth_date`        DATE         NULL DEFAULT NULL,
-    `created_timestamp` DATETIME(6)       DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `UK_account_id` (account_id ASC) VISIBLE,
-    CONSTRAINT `FK_ACCOUNT_DETAILS_account_id_ACCOUNT_id` FOREIGN KEY (`account_id`) REFERENCES `cdas`.`account` (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+    "id"                BIGSERIAL,
+    "account_id"        BIGINT NOT NULL UNIQUE,
+    "gender"            TEXT,
+    "birth_date"        DATE,
+    "created_timestamp" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+    PRIMARY KEY ("id"),
+    CONSTRAINT UK_account_id UNIQUE ("account_id"),
+    CONSTRAINT fk_account_details_to_account_werlwfsdf
+        FOREIGN KEY (account_id) REFERENCES "account" (id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_id_28234535325
+    ON "account_detail" USING hash ("id");

@@ -13,15 +13,15 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    @Query(value = "SELECT * FROM account a WHERE a.username = :username", nativeQuery = true)
+    @Query(value = "SELECT * FROM public.account a WHERE a.username = :username", nativeQuery = true)
     Optional<Account> findByUsername(@QueryParam("username") String username);
 
-    @Query(value = "SELECT a.photo FROM account a WHERE a.username = :username", nativeQuery = true)
+    @Query(value = "SELECT a.photo FROM public.account a WHERE a.username = :username", nativeQuery = true)
     Optional<byte[]> getPhotoByAccountUsername(@QueryParam("username") String username);
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM account a WHERE a.username = :username", nativeQuery = true)
+    @Query(value = "DELETE FROM public.account a WHERE a.username = :username", nativeQuery = true)
     void deleteByUsername(@QueryParam("username") String username);
 
     boolean existsByUsername(String username);

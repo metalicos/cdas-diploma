@@ -17,7 +17,7 @@ spring:
   datasource:
     username: ${CDAS_DB_USERNAME}
     password: ${CDAS_DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
     url: ${CDAS_DB_URL}
   jpa:
     hibernate:

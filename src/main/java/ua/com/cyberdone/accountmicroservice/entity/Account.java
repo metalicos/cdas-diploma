@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.sql.Blob;
 import java.util.Objects;
 import java.util.Set;
 
@@ -61,7 +62,7 @@ public class Account extends BasicSecurity {
 
     @Lob
     @Column(name = "photo")
-    private byte[] photo;
+    private Blob photo;
 
     @ManyToMany(cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = FetchType.EAGER)
     @JoinTable(name = "account_has_account_role",

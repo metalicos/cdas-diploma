@@ -12,12 +12,12 @@ import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    @Query(value = "SELECT DISTINCT * FROM account_role r WHERE r.role = :role LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT * FROM public.account_role r WHERE r.role = :role LIMIT 1", nativeQuery = true)
     Optional<Role> findByRole(@QueryParam("role") String role);
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM account_role r WHERE r.role = :role", nativeQuery = true)
+    @Query(value = "DELETE FROM public.account_role r WHERE r.role = :role", nativeQuery = true)
     void deleteByRole(@QueryParam("role") String role);
 
     boolean existsByRole(String role);

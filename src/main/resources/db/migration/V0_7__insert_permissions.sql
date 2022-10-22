@@ -1,6 +1,7 @@
-USE `cdas`;
+SET SCHEMA 'public';
+
 START TRANSACTION;
-INSERT INTO `cdas`.`permission` (id, name, value)
+INSERT INTO "permission" ("id", "name", "value")
 VALUES (1, 'Read All', 'r_all'),
        (2, 'Write All', 'w_all'),
        (3, 'Update All', 'u_all'),
@@ -77,7 +78,7 @@ VALUES (1, 'Read All', 'r_all'),
        (64, 'Update Hydroponic Clear Ph Calibration', 'u_hydroponic_calibrate_ph_clear'),
        (65, 'Update Hydroponic Setup Ph', 'u_hydroponic_setup_ph'),
        (66, 'Update Hydroponic Setup Tds', 'u_hydroponic_setup_tds'),
-#        (67, 'Update Hydroponic Dispensers Recheck Time', 'u_hydroponic_dispensers_recheck_time'),
+       (67, 'Update Hydroponic Dispensers Recheck Time', 'u_hydroponic_dispensers_recheck_time'),
        (68, 'Update Hydroponic Ph Up Dose', 'u_hydroponic_dose_ph_up'),
        (69, 'Update Hydroponic Ph Down Dose', 'u_hydroponic_dose_ph_down'),
        (70, 'Update Hydroponic Tds Dose', 'u_hydroponic_dose_tds'),
@@ -92,7 +93,8 @@ VALUES (1, 'Read All', 'r_all'),
        (78, 'Read All Hydroponic Calibration Data', 'r_all_hydroponic_calibration_data'),
        (79, 'Delete Hydroponic Calibration Data', 'd_hydroponic_calibration_data'),
        (80, 'Update Hydroponic Ph Sensor Calibration From Database Data', 'u_hydroponic_ph_calibration_from_database'),
-       (81, 'Update Hydroponic Tds Sensor Calibration From Database Data', 'u_hydroponic_tds_calibration_from_database'),
+       (81, 'Update Hydroponic Tds Sensor Calibration From Database Data',
+        'u_hydroponic_tds_calibration_from_database'),
 
        (82, 'Read Delegated Device Control Using Self Token', 'r_self_delegated_device_control'),
        (83, 'Read Delegated Device Control', 'r_delegated_device_control'),
@@ -102,7 +104,9 @@ VALUES (1, 'Read All', 'r_all'),
        (86, 'Update Hydroponic Dispensers Tds Recheck Time', 'u_hydroponic_dispensers_tds_recheck_time'),
        (87, 'Update Hydroponic Dispensers Ph Recheck Time', 'u_hydroponic_dispensers_ph_recheck_time'),
        (88, 'Update Hydroponic Clear Impurity Calculation', 'u_hydroponic_clear_impurity_calculation'),
-       (89, 'Update Hydroponic Calculate Start Solution As Fertiliser', 'u_hydroponic_calculate_start_solution_as_fertilizer'),
-       (90, 'Update Hydroponic Calculate Ph Regulation As Fertiliser', 'u_hydroponic_calculate_ph_regulation_as_fertilizer');
+       (89, 'Update Hydroponic Calculate Start Solution As Fertiliser',
+        'u_hydroponic_calculate_start_solution_as_fertilizer'),
+       (90, 'Update Hydroponic Calculate Ph Regulation As Fertiliser',
+        'u_hydroponic_calculate_ph_regulation_as_fertilizer');
 
 COMMIT;

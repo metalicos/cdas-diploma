@@ -1,6 +1,7 @@
-USE `cdas`;
+SET SCHEMA 'public';
+
 START TRANSACTION;
-INSERT INTO `cdas`.`role_has_permission`(role_id, permission_id)
+INSERT INTO "role_has_permission" ("role_id", "permission_id")
 VALUES
 
 

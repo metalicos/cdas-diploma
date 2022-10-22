@@ -1,13 +1,18 @@
-USE `cdas`;
-CREATE TABLE `cdas`.`permission`
+SET SCHEMA 'public';
+
+CREATE TABLE permission
 (
-    `id`                BIGINT       NOT NULL AUTO_INCREMENT,
-    `name`              VARCHAR(300) NOT NULL UNIQUE,
-    `value`             VARCHAR(300) NOT NULL UNIQUE,
-    `created_timestamp` DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `UK_name` (`name` ASC) VISIBLE,
-    UNIQUE INDEX `UK_value` (`name` ASC) VISIBLE
-) ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+    "id"                BIGSERIAL,
+    "name"              TEXT NOT NULL UNIQUE,
+    "value"             TEXT NOT NULL UNIQUE,
+    "created_timestamp" TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+    PRIMARY KEY ("id"),
+    CONSTRAINT UK_name UNIQUE ("name"),
+    CONSTRAINT UK_value UNIQUE ("value")
+);
+
+CREATE INDEX IF NOT EXISTS idx_name_2120938912 ON permission USING hash ("name");
+
+CREATE INDEX IF NOT EXISTS idx_value_49879305234 ON permission USING hash ("value");
+
+CREATE INDEX IF NOT EXISTS idx_id_49879305644 ON permission USING hash ("id");

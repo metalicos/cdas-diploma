@@ -1,6 +1,8 @@
-USE `cdas`;
+SET SCHEMA 'public';
+
+
 START TRANSACTION;
-INSERT INTO `cdas`.`account_role`(`id`, `role`)
+INSERT INTO "account_role" ("id", "role")
 VALUES (1, 'OWNER'),
        (2, 'SUPER_ADMIN'),
        (3, 'ADMIN'),
